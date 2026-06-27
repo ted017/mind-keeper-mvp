@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마음지키미 AI 위기학생 선제 대응 시스템</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 상단 네비게이션 바 -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>마음지키미 <span>Mind-Navi</span></h1>
+                    <p>공공데이터 기반 위기 학생 선제 대응 시스템</p>
+                </div>
+            </div>
+            
+            <!-- 역할 전환 탭 -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="student">
+                    <i class="fa-solid fa-graduation-cap"></i> 학생용 (AI 멘토 나비)
+                </button>
+                <button class="tab-btn" data-tab="teacher">
+                    <i class="fa-solid fa-chalkboard-user"></i> 교사용 대시보드
+                    <span class="badge" id="alert-badge" style="display: none;">0</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <main class="app-main">
+            
+            <!-- 1. 학생용 뷰 -->
+            <section id="student-view" class="tab-content active">
+                <div class="student-layout">
+                    <!-- 좌측: 가이드 및 안내 -->
+                    <div class="student-sidebar">
+                        <div class="glass-card info-card">
+                            <h3>👋 안녕! 난 AI 멘토 <span class="highlight">나비</span>야</h3>
+                            <p>공부 때문에 힘들거나, 요즘 마음이 답답하고 고민이 있다면 언제든 편하게 말해줘. 넌 혼자가 아니야.</p>
+                            
+                            <div class="tip-box">
+                                <i class="fa-solid fa-lightbulb"></i>
+                                <span>아래 문장을 클릭하면 나비와 대화를 시작할 수 있어.</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-card scenario-card">
+                            <h4>💡 대화 예시 클릭해보기</h4>
+                            <div class="scenario-buttons">
+                                <button class="scenario-btn" data-text="요즘 시험 성적이 너무 떨어져서 괴로워요. 다 포기하고 싶어요.">
+                                    📉 성적 하락 및 학업 고민
+                                </button>
+                                <button class="scenario-btn" data-text="친구들이랑도 멀어지고 교실에서 혼자 있는 것 같아요. 학교 가기 싫어요.">
+                                    👥 교우 관계 및 고립감
+                                </button>
+                                <button class="scenario-btn" data-text="학교 그만두고 자퇴하면 어떨까 고민 중이에요. 아무도 내 말을 안 들어줘요.">
+                                    🚪 자퇴 및 학업 중단 고민
+                                </button>
+                                <button class="scenario-btn" data-text="오늘 하루도 그냥 무난하게 보냈어요. 내일 수학 수행평가 준비 중이에요!">
+                                    😊 일상적인 대화
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 우측: 챗봇 창 -->
+                    <div class="chat-container glass-card">
+                        <div class="chat-header">
+                            <div class="avatar">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div class="chat-title-info">
+                                <h3>AI 멘토 나비</h3>
+                                <span class="status-online"><span class="dot"></span>나와 대화 중</span>
+                            </div>
+                            <div class="chat-actions">
+                                <span class="security-tag"><i class="fa-solid fa-shield-halved"></i> 온디바이스 보안 모드</span>
+                            </div>
+                        </div>
+
+                        <!-- 채팅 메시지 영역 -->
+                        <div class="chat-messages" id="chat-messages">
+                            <!-- 초기 메시지 -->
+                            <div class="message-wrapper assistant">
+                                <div class="message-bubble">
+                                    반가워! 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자. 😊
+                                </div>
+                                <span class="message-time">방금 전</span>
+                            </div>
+                        </div>
+
+                        <!-- 채팅 입력 영역 -->
+                        <div class="chat-input-area">
+                            <input type="text" id="chat-input" placeholder="여기에 고민이나 이야기를 입력해보세요..." autocomplete="off">
+                            <button id="send-btn" class="send-button">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opt-in 동의 모달 -->
+                <div class="modal-overlay" id="optin-modal">
+                    <div class="modal-content glass-card">
+                        <div class="modal-header">
+                            <div class="warning-icon-wrapper">
+                                <i class="fa-solid fa-hand-holding-hand"></i>
+                            </div>
+                            <h2>따뜻한 도움을 연결해 드릴까요?</h2>
+                        </div>
+                        <div class="modal-body">
+                            <p>이야기를 들어보니 요즘 마음이 많이 무겁고 힘들겠구나. 😢</p>
+                            <p>너의 소중한 고민 요약본을 **학교 상담 선생님(Wee 클래스)**께 살짝 전달해서, 선생님이 먼저 다정하게 손을 내밀 수 있도록 도와주고 싶어.</p>
+                            <div class="security-notice">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <span>동의해주신 경우에만 선생님께 연계되며, 동의하지 않더라도 대화 내용은 가명화 처리되어 외부로 노출되지 않으니 안심해.</span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="optin-deny-btn" class="btn btn-secondary">혼자 해결해볼게요</button>
+                            <button id="optin-accept-btn" class="btn btn-primary">네, 선생님께 연결해 주세요</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. 교사용 뷰 -->
+            <section id="teacher-view" class="tab-content">
+                <div class="teacher-layout">
+                    <!-- 거시적 경보 배너/알림 -->
+                    <div class="alert-banner-container" id="macro-alerts">
+                        <!-- 동적으로 경보 추가 -->
+                    </div>
+
+                    <!-- 대시보드 격자 레이아웃 -->
+                    <div class="dashboard-grid">
+                        <!-- 카드 1: Risk Heatmap -->
+                        <div class="glass-card dashboard-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-border-all"></i> 학급별 위험 위험도 히트맵 (거시 통계)</h3>
+                                <span class="badge badge-info">가명 통계</span>
+                            </div>
+                            <div class="card-body heatmap-container">
+                                <div class="heatmap-grid" id="risk-heatmap">
+                                    <!-- JS에서 생성 -->
+                                </div>
+                                <div class="heatmap-legend">
+                                    <span>안전 (Safe)</span>
+                                    <div class="legend-color legend-safe"></div>
+                                    <div class="legend-color legend-warning"></div>
+                                    <div class="legend-color legend-danger"></div>
+                                    <span>위험 (Danger)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 카드 2: 위기 징후 핵심 지표 차트 -->
+                        <div class="glass-card dashboard-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-chart-line"></i> 학년별 위기 지수 추이 (Macro 공공데이터 결합)</h3>
+                                <span class="badge badge-info">실시간 결합</span>
+                            </div>
+                            <div class="card-body chart-wrapper">
+                                <canvas id="riskTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 하단: 안전망 연계 관리 현황 (Opt-in 완료 리스트) -->
+                    <div class="glass-card table-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-shield-heart"></i> 실시간 안전망 연계 현황 (Wee 클래스 연계)</h3>
+                            <span class="badge badge-primary" id="connected-count">0건 연계됨</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>학생 구분 (익명/실명)</th>
+                                            <th>소속</th>
+                                            <th>위기 등급</th>
+                                            <th>감지된 주요 키워드</th>
+                                            <th>AI 상담 요약 (Triage)</th>
+                                            <th>연계 상태</th>
+                                            <th>액션</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="connection-list">
+                                        <!-- 동적으로 연계 학생 추가 -->
+                                        <tr class="empty-row" id="empty-table-row">
+                                            <td colspan="7">실시간으로 연계되거나 탐지된 위기 징후가 아직 없습니다.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- 푸터 -->
+        <footer class="app-footer-info">
+            <p>© 2026 마음지키미 3.0. 온디바이스(On-device) AI 탑재형 위기학생 선제 탐지 시스템 MVP</p>
+        </footer>
+    </div>
+    <!-- Custom Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
