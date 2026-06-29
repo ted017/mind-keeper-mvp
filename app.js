@@ -5,10 +5,15 @@ const state = {
     activeTab: 'student',
     studentName: '김지훈',
     studentGradeClass: '2학년 3반',
-    detectedRiskLevel: 'Safe',
-    detectedKeywords: [],
-    chatbotRiskScore: 0,
-    chatHistory: [],
+    detectedRiskLevel: 'Danger',
+    detectedKeywords: ['자퇴', '죽고싶다', '포기하고 싶다'],
+    chatbotRiskScore: 88,
+    chatHistory: [
+        { sender: 'assistant', text: "반가워! 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자. 😊", time: "어제 14:02" },
+        { sender: 'user', text: "요즘 시험 성적이 너무 떨어져서 괴로워요. 다 포기하고 싶어요.", time: "어제 14:03" },
+        { sender: 'assistant', text: "우리 지훈이, 이번 시험 때문에 마음고생이 정말 많았구나. 밤새며 노력한 거 다 아는데 결과가 안 나와 속상했겠어.", time: "어제 14:03" },
+        { sender: 'user', text: "이젠 정말 학교 그만두고 자퇴하고 싶어요. 죽고싶다는 생각만 가득 차요.", time: "어제 14:04" }
+    ],
     optInStatus: null, // 'accepted' | 'denied' | null
     connectedStudents: [], // 대시보드 연계 리스트
     unreadAlerts: 0
@@ -300,10 +305,60 @@ function initDashboard() {
     renderHeatmap();
     renderChart();
     
+    // 초기 데모 데이터 자동 로딩
+    loadInitialDemoData();
+    
     // 주기적으로 Macro(거시) 공공데이터 경보 시뮬레이션 발생 (2초 후 최초 발생)
     setTimeout(() => {
         triggerMacroAlert("경보: 현재 [2학년 5반]에서 공교육 이탈(무단결석 누적) 위험 지수 임계치 초과. 선제적 상담 매칭이 권장됩니다.");
     }, 2000);
+}
+
+// 1-1. 초기 데모용 학생 데이터 로딩 (테스트 및 심사용)
+function loadInitialDemoData() {
+    const listContainer = document.getElementById('connection-list');
+    const emptyRow = document.getElementById('empty-table-row');
+
+    if (emptyRow) {
+        emptyRow.remove();
+    }
+
+    // 데모 1: 가명 비식별 학생 (사전 동의 거부 시뮬레이션)
+    const trPseudo = document.createElement('tr');
+    trPseudo.id = 'demo-pseudo-row';
+    trPseudo.innerHTML = `
+        <td><span class="tbl-badge safe"><i class="fa-solid fa-user-secret"></i> 가명 학생 (비식별)</span></td>
+        <td>1학년 (학반 비식별)</td>
+        <td><span class="tbl-badge warning">중위험</span></td>
+        <td><span class="keyword-tag">우울</span><span class="keyword-tag">성적</span></td>
+        <td><div class="triage-summary" title="개인 정보 보호를 위해 상세 요약 비공개">비식별 감성 데이터 분석에 의한 수치 누적 (상세 정보 비공개)</div></td>
+        <td><span class="tbl-badge safe">거시 통계 누적</span></td>
+        <td><button class="action-btn" style="background:#64748b;" onclick="alert('사전 동의(Opt-in)하지 않은 학생의 개별 데이터는 개인정보보호법에 의해 열람할 수 없습니다.')"><i class="fa-solid fa-lock"></i> 열람 불가</button></td>
+    `;
+    listContainer.appendChild(trPseudo);
+
+    // 데모 2: 실명 연계 학생 (김지훈 - 사전 동의 완료 시뮬레이션)
+    const trReal = document.createElement('tr');
+    trReal.id = 'demo-real-row';
+    trReal.innerHTML = `
+        <td><strong>김지훈</strong></td>
+        <td>2학년 3반</td>
+        <td><span class="tbl-badge danger">고위험</span></td>
+        <td><span class="keyword-tag">자퇴</span><span class="keyword-tag">죽고싶다</span><span class="keyword-tag">포기</span></td>
+        <td><div class="triage-summary" title="김지훈 학생은 최근 학업 관련 고충 및 극단적 무력감을 토로함. AI 상담 결과 자퇴, 죽고싶다, 포기 등 우울 및 자해 위험 징후 키워드가 대량 검출되어 Wee 클래스 긴급 개입 필요 권고.">김지훈 학생은 최근 학업 관련 고충 및 극단적 무력감을 토로함...</div></td>
+        <td><span class="tbl-badge warning" id="status-badge-demo-real-row">상담 대기</span></td>
+        <td>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <button class="action-btn" style="background:var(--primary-color);" onclick="openDetailModal()"><i class="fa-solid fa-file-invoice"></i> 상세 보고서</button>
+                <button class="action-btn" id="action-btn-demo-real-row" onclick="connectWeeClass('demo-real-row', '김지훈')"><i class="fa-solid fa-handshake-angle"></i> Wee클래스 연계</button>
+            </div>
+        </td>
+    `;
+    listContainer.appendChild(trReal);
+
+    // 초기 상태 수치 연동
+    state.connectedStudents.push('김지훈');
+    document.getElementById('connected-count').innerText = `${state.connectedStudents.length}건 연계됨`;
 }
 
 // 1. Heatmap 그리드 동적 생성

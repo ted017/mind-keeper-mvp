@@ -877,18 +877,19 @@ body {
 
 .tbl-badge.safe { background: rgba(16, 185, 129, 0.1); color: var(--color-safe); }
 .tbl-badge.warning { background: rgba(245, 158, 11, 0.1); color: var(--color-warning); }
-.tbl-badge.danger { background: rgba(239, 68, 68, 0.1); color: var(--color-danger); }
+.tbl-badge.danger { background: var(--color-danger); color: white; font-weight: 700; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3); }
 
 .keyword-tag {
-    background: rgba(239, 68, 68, 0.08);
-    color: var(--color-danger);
-    border: 1px solid rgba(239, 68, 68, 0.15);
+    background: rgba(239, 68, 68, 0.06);
+    color: #dc2626; /* 더 짙고 붉은 글씨 */
+    border: 1px solid rgba(239, 68, 68, 0.3);
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.72rem;
-    font-weight: 600;
+    font-weight: 800; /* 볼드 강조 */
     margin-right: 4px;
     display: inline-block;
+    box-shadow: 0 1px 3px rgba(239, 68, 68, 0.05);
 }
 
 .triage-summary {
