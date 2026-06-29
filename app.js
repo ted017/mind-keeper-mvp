@@ -335,6 +335,12 @@ function renderHeatmap() {
 
         cellEl.appendChild(titleSpan);
         cellEl.appendChild(valSpan);
+
+        // 클릭 이벤트 추가 (오른쪽 그래프 실시간 연동)
+        cellEl.addEventListener('click', () => {
+            toggleHeatmapCellSelect(cell, cellEl);
+        });
+
         grid.appendChild(cellEl);
     });
 }
@@ -649,3 +655,109 @@ window.closeDetailModal = function() {
     const modal = document.getElementById('detail-modal');
     modal.classList.remove('open');
 };
+
+// ==========================================================================
+// 5. 히트맵-그래프 실시간 인터랙션 연동 로직
+// ==========================================================================
+let selectedCell = null;
+
+function toggleHeatmapCellSelect(cell, cellEl) {
+    const allCells = document.querySelectorAll('.heatmap-cell');
+    
+    // 이미 선택된 셀을 다시 누른 경우 -> 초기화(전체 학년 평균 복원)
+    if (selectedCell && selectedCell.grade === cell.grade && selectedCell.class === cell.class) {
+        allCells.forEach(c => c.classList.remove('selected-cell'));
+        selectedCell = null;
+        restoreDefaultChart();
+        return;
+    }
+
+    // 새로운 셀 선택
+    allCells.forEach(c => c.classList.remove('selected-cell'));
+    cellEl.classList.add('selected-cell');
+    selectedCell = cell;
+
+    // 해당 학급의 시뮬레이션된 추이 그래프 데이터 생성
+    const targetVal = cell.val;
+    const mockClassData = [
+        Math.max(0, Math.round(targetVal - 30)),
+        Math.max(0, Math.round(targetVal - 20)),
+        Math.max(0, Math.round(targetVal - 10)),
+        Math.max(0, Math.round(targetVal - 15)),
+        Math.max(0, Math.round(targetVal - 5)),
+        targetVal
+    ];
+
+    // 차트 업데이트
+    if (window.riskChart) {
+        window.riskChart.data.datasets = [
+            {
+                label: `${cell.grade}학년 ${cell.class}반 위기 지수`,
+                data: mockClassData,
+                borderColor: cell.val > 70 ? '#ef4444' : (cell.val > 35 ? '#f59e0b' : '#8b5cf6'),
+                backgroundColor: cell.val > 70 ? 'rgba(239, 68, 68, 0.12)' : (cell.val > 35 ? 'rgba(245, 158, 11, 0.12)' : 'rgba(139, 92, 246, 0.12)'),
+                borderWidth: 3,
+                tension: 0.35,
+                fill: true
+            }
+        ];
+        
+        // 차트 타이틀 옵션 추가
+        window.riskChart.options.plugins.title = {
+            display: true,
+            text: `${cell.grade}학년 ${cell.class}반 위기 지수 추이 (상세 분석)`,
+            font: {
+                family: 'Outfit, Noto Sans KR',
+                size: 13,
+                weight: 'bold'
+            },
+            color: '#1e1b4b'
+        };
+        
+        window.riskChart.update();
+    }
+}
+
+function restoreDefaultChart() {
+    if (window.riskChart) {
+        // 그라데이션 재생성
+        const ctx = document.getElementById('riskTrendChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(139, 92, 246, 0.45)');
+        gradient.addColorStop(1, 'rgba(139, 92, 246, 0.01)');
+
+        window.riskChart.data.datasets = [
+            {
+                label: '1학년 평균 위험 지수',
+                data: [15, 18, 22, 19, 24, 25],
+                borderColor: '#a855f7',
+                borderWidth: 2,
+                tension: 0.35,
+                fill: false
+            },
+            {
+                label: '2학년 평균 위험 지수',
+                data: [28, 32, 45, 41, 55, 58],
+                borderColor: '#8b5cf6',
+                backgroundColor: gradient,
+                borderWidth: 3,
+                tension: 0.35,
+                fill: true
+            },
+            {
+                label: '3학년 평균 위험 지수',
+                data: [35, 30, 48, 52, 49, 50],
+                borderColor: '#f59e0b',
+                borderWidth: 2,
+                tension: 0.35,
+                fill: false
+            }
+        ];
+        
+        window.riskChart.options.plugins.title = {
+            display: false
+        };
+        
+        window.riskChart.update();
+    }
+}

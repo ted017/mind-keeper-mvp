@@ -1242,3 +1242,11 @@ body {
     gap: 12px;
 }
 
+/* 히트맵 셀 선택 강조 스타일 */
+.selected-cell {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(139, 92, 246, 0.3) !important;
+}
+
