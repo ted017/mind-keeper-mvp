@@ -168,11 +168,15 @@ function appendMessage(text, sender) {
     
     const now = new Date();
     const minutes = now.getMinutes().toString().padStart(2, '0');
-    time.innerText = `${now.getHours()}:${minutes}`;
+    const formattedTime = `${now.getHours()}:${minutes}`;
+    time.innerText = formattedTime;
 
     wrapper.appendChild(bubble);
     wrapper.appendChild(time);
     messagesContainer.appendChild(wrapper);
+
+    // 대화 이력 누적 저장
+    state.chatHistory.push({ sender, text, time: formattedTime });
 
     // 자동 스크롤
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -471,6 +475,10 @@ function addStudentToDashboardConnection(isPseudonym) {
         statusColumn = `<span class="tbl-badge safe">거시 통계 누적</span>`;
         actionButton = `<button class="action-btn" style="background:#64748b;" onclick="alert('사전 동의(Opt-in)하지 않은 학생의 개별 데이터는 개인정보보호법에 의해 열람할 수 없습니다.')"><i class="fa-solid fa-lock"></i> 열람 불가</button>`;
 
+        // 공공데이터 패널 실시간 통계 업데이트
+        document.getElementById('macro-drop-rate').innerText = "2학년 평균 자퇴 위험도 15% 증가";
+        document.getElementById('macro-safety-index').innerText = "비식별 우울 징후 감지 건수 누적";
+
         // 거시적 통계 업데이트 (히트맵 가중치 증가)
         // 2학년 3반의 위기도를 +35 증가시킴 (학급 평균 수치 반영)
         const cellIndex = initialHeatmapData.findIndex(cell => cell.grade === 2 && cell.class === 3);
@@ -500,7 +508,16 @@ function addStudentToDashboardConnection(isPseudonym) {
         keywordsColumn = keywordsHtml;
         triageSummary = `<div class="triage-summary" title="${triageSummaryText}">${triageSummaryText}</div>`;
         statusColumn = `<span class="tbl-badge warning" id="status-badge-${tr.id}">상담 대기</span>`;
-        actionButton = `<button class="action-btn" id="action-btn-${tr.id}" onclick="connectWeeClass('${tr.id}', '${state.studentName}')"><i class="fa-solid fa-handshake-angle"></i> Wee클래스 연계</button>`;
+        actionButton = `
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <button class="action-btn" style="background:var(--primary-color);" onclick="openDetailModal()"><i class="fa-solid fa-file-invoice"></i> 상세 보고서</button>
+                <button class="action-btn" id="action-btn-${tr.id}" onclick="connectWeeClass('${tr.id}', '${state.studentName}')"><i class="fa-solid fa-handshake-angle"></i> Wee클래스 연계</button>
+            </div>
+        `;
+
+        // 공공데이터 패널 실시간 통계 업데이트 (실명 위기 발생)
+        document.getElementById('macro-drop-rate').innerText = "2학년 3반 위기 점수 급증 (95%)";
+        document.getElementById('macro-safety-index').innerText = "자퇴 Threshold 긴급 돌파 경보";
 
         // 실명 연계의 경우도 히트맵 및 통계 업데이트
         const cellIndex = initialHeatmapData.findIndex(cell => cell.grade === 2 && cell.class === 3);
@@ -553,4 +570,82 @@ window.connectWeeClass = function(rowId, studentName) {
 
         alert(`[보안 전송 완료] ${studentName} 학생의 심리 상담 요약 리포트가 관내 Wee 클래스 1급 전문 상담사의 온디바이스 데스크탑 환경으로 안전하게 연계 전송되었습니다.`);
     }
+};
+
+// ==========================================================================
+// 4. 상세 보고서 모달 관리 로직
+// ==========================================================================
+window.openDetailModal = function() {
+    const modal = document.getElementById('detail-modal');
+    modal.classList.add('open');
+
+    // 학생 정보 세팅
+    document.getElementById('detail-student-info').innerText = `${state.studentGradeClass} ${state.studentName}`;
+    
+    // 위험도 뱃지 및 점수 연동
+    const badge = document.getElementById('detail-risk-badge');
+    badge.innerText = state.detectedRiskLevel === 'Danger' ? '고위험' : '중위험';
+    badge.className = `tbl-badge ${state.detectedRiskLevel === 'Danger' ? 'danger' : 'warning'}`;
+
+    document.getElementById('detail-risk-score').innerText = `${state.chatbotRiskScore} / 100`;
+    document.getElementById('detail-risk-progress').style.width = `${state.chatbotRiskScore}%`;
+
+    // 키워드 목록 렌더링
+    const kwList = document.getElementById('detail-keywords-list');
+    kwList.innerHTML = state.detectedKeywords.map(kw => `<span class="keyword-tag">${kw}</span>`).join('') || '<span class="text-light">감지 키워드 없음</span>';
+
+    // 처방전 텍스트 연동
+    const prescription = document.getElementById('detail-ai-prescription');
+    if (state.detectedRiskLevel === 'Danger') {
+        prescription.innerHTML = `학생이 <strong>'${state.detectedKeywords.join(', ')}'</strong> 등 극단적/학업중단 우려 단어를 반복적으로 발화하고 있습니다. 감정적 붕괴 수준이 임계치(80점)를 초과하여 자퇴 도미노의 '초기 징후(Early Stage)'가 뚜렷이 포착되었습니다. <strong>즉각적인 대면 면담 및 보호자 연락, Wee 클래스 정밀 진단 연계를 강력히 권고합니다.</strong>`;
+    } else {
+        prescription.innerHTML = `학생이 학업 부진 및 소외감으로 인해 중등도의 불안 상태를 겪고 있습니다. 성적 하락에 따른 '학업 포기' 키워드가 감지되었습니다. <strong>정기적인 관찰 상담 및 Wee 클래스 멘토링 프로그램 매칭을 권장합니다.</strong>`;
+    }
+
+    // 대화 기록 원본 렌더링
+    const historyContainer = document.getElementById('detail-chat-history');
+    historyContainer.innerHTML = ''; // 초기화
+
+    state.chatHistory.forEach(msg => {
+        const msgWrapper = document.createElement('div');
+        msgWrapper.className = `history-msg-wrapper ${msg.sender}`;
+
+        const bubble = document.createElement('div');
+        bubble.className = 'history-bubble';
+        bubble.innerText = msg.text;
+
+        const time = document.createElement('span');
+        time.className = 'history-time';
+        time.innerText = msg.time;
+
+        msgWrapper.appendChild(bubble);
+        msgWrapper.appendChild(time);
+        historyContainer.appendChild(msgWrapper);
+    });
+    
+    // 자동 하단 스크롤
+    historyContainer.scrollTop = historyContainer.scrollHeight;
+
+    // 모달 푸터 버튼 렌더링
+    const footer = document.getElementById('detail-modal-footer');
+    // 현재 상담 행의 ID를 찾아서 동일한 버튼 상태 적용
+    const rowId = document.querySelector('#connection-list tr').id;
+    const isAlreadyConnected = state.connectedStudents.includes(state.studentName) && document.getElementById(`status-badge-${rowId}`).innerText === '연계 완료';
+
+    if (isAlreadyConnected) {
+        footer.innerHTML = `
+            <button class="btn btn-secondary" onclick="closeDetailModal()">닫기</button>
+            <button class="btn btn-primary" style="background:#10b981; cursor:default;" disabled><i class="fa-solid fa-circle-check"></i> Wee클래스 연계 완료</button>
+        `;
+    } else {
+        footer.innerHTML = `
+            <button class="btn btn-secondary" onclick="closeDetailModal()">닫기</button>
+            <button class="btn btn-primary" onclick="connectWeeClass('${rowId}', '${state.studentName}'); closeDetailModal();"><i class="fa-solid fa-handshake-angle"></i> 즉시 Wee클래스 연계</button>
+        `;
+    }
+};
+
+window.closeDetailModal = function() {
+    const modal = document.getElementById('detail-modal');
+    modal.classList.remove('open');
 };

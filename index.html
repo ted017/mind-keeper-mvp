@@ -147,6 +147,34 @@
                         <!-- 동적으로 경보 추가 -->
                     </div>
 
+                    <!-- 교육부 공공데이터 (Macro) 연동 현황 패널 -->
+                    <div class="macro-integration-panel">
+                        <div class="glass-card stat-card border-warning">
+                            <div class="stat-header">
+                                <span><i class="fa-solid fa-graduation-cap"></i> 학업 중단 및 결석 통계</span>
+                                <span class="pulse-indicator warning"></span>
+                            </div>
+                            <div class="stat-value" id="macro-drop-rate">2학년 평균 자퇴 위험도 12% 증가</div>
+                            <div class="stat-desc">중간/기말시험 직후 학업 포기 패턴 감지 (Threshold 초과)</div>
+                        </div>
+                        <div class="glass-card stat-card border-danger">
+                            <div class="stat-header">
+                                <span><i class="fa-solid fa-triangle-exclamation"></i> 교내외 학교폭력/안전사고 데이터</span>
+                                <span class="pulse-indicator danger"></span>
+                            </div>
+                            <div class="stat-value" id="macro-safety-index">관내 사고 발생 빈도: 경계 수준</div>
+                            <div class="stat-desc">정서적 고립 및 멘탈 붕괴 동인 공간/시간 매칭 정확도 극대화</div>
+                        </div>
+                        <div class="glass-card stat-card">
+                            <div class="stat-header">
+                                <span><i class="fa-solid fa-server"></i> 온디바이스 AI 구동 상태</span>
+                                <span class="pulse-indicator safe"></span>
+                            </div>
+                            <div class="stat-value">로컬 SQLite 암호화 연동</div>
+                            <div class="stat-desc">AES-256 데이터베이스 정상 작동 중 (외부 클라우드 전송 차단)</div>
+                        </div>
+                    </div>
+
                     <!-- 대시보드 격자 레이아웃 -->
                     <div class="dashboard-grid">
                         <!-- 카드 1: Risk Heatmap -->
@@ -220,6 +248,60 @@
             <p>© 2026 마음지키미 3.0. 온디바이스(On-device) AI 탑재형 위기학생 선제 탐지 시스템 MVP</p>
         </footer>
     </div>
+    <!-- 상세 보고서 모달 -->
+    <div class="modal-overlay" id="detail-modal">
+        <div class="modal-content glass-card detail-modal-content">
+            <div class="modal-header-detail">
+                <div class="detail-header-left">
+                    <h2><i class="fa-solid fa-file-invoice"></i> 위기 학생 AI 분석 상세 보고서</h2>
+                    <p class="subtitle"><span id="detail-student-info">2학년 3반 김지훈</span> | 위기 등급: <span id="detail-risk-badge" class="tbl-badge danger">고위험</span></p>
+                </div>
+                <button class="close-modal-btn" onclick="closeDetailModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body-detail">
+                <!-- 좌측: AI 분석 소견 -->
+                <div class="detail-section-ai">
+                    <h4><i class="fa-solid fa-robot"></i> AI Triage 분석 소견</h4>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-item">
+                            <span class="label">감정 위기 지수</span>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar" id="detail-risk-progress" style="width: 85%;"></div>
+                            </div>
+                            <span class="value-text" id="detail-risk-score">85 / 100</span>
+                        </div>
+                        
+                        <div class="analysis-item">
+                            <span class="label">감지 핵심 키워드</span>
+                            <div id="detail-keywords-list">
+                                <!-- 키워드 동적 렌더링 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="triage-verdict-box">
+                        <h5>🛡️ AI 처방 및 권고사항</h5>
+                        <p id="detail-ai-prescription">학생이 '자퇴' 및 '포기하고 싶다'라는 고위험 키워드를 반복적으로 발화했습니다. 학업 동인에 의한 정서적 고립이 매우 심각하므로, 즉시 Wee 클래스 전문 상담사의 대면 개입 및 보호자 상담 연계를 권고합니다.</p>
+                    </div>
+                </div>
+
+                <!-- 우측: 챗봇 대화 기록 히스토리 -->
+                <div class="detail-section-chat">
+                    <h4><i class="fa-solid fa-message"></i> 나비 챗봇 상담 기록 (대화 원본)</h4>
+                    <div class="chat-history-timeline" id="detail-chat-history">
+                        <!-- 대화 기록 동적 렌더링 -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer-detail" id="detail-modal-footer">
+                <!-- 연계 버튼 등 동적 렌더링 -->
+            </div>
+        </div>
+    </div>
+
     <!-- Custom Scripts -->
     <script src="app.js"></script>
 </body>
