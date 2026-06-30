@@ -1,18 +1,15 @@
 // ==========================================================================
-// 전역 상태 및 데이터 정의
+// 전역 상태 및 데이터 정의 (실시간 대화용으로 분리)
 // ==========================================================================
 const state = {
     activeTab: 'student',
-    studentName: '김지훈',
+    studentName: '지훈',
     studentGradeClass: '2학년 3반',
-    detectedRiskLevel: 'Danger',
-    detectedKeywords: ['자퇴', '죽고싶다', '포기하고 싶다'],
-    chatbotRiskScore: 88,
+    detectedRiskLevel: 'Safe',
+    detectedKeywords: [],
+    chatbotRiskScore: 0,
     chatHistory: [
-        { sender: 'assistant', text: "반가워! 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자. 😊", time: "어제 14:02" },
-        { sender: 'user', text: "요즘 시험 성적이 너무 떨어져서 괴로워요. 다 포기하고 싶어요.", time: "어제 14:03" },
-        { sender: 'assistant', text: "우리 지훈이, 이번 시험 때문에 마음고생이 정말 많았구나. 밤새며 노력한 거 다 아는데 결과가 안 나와 속상했겠어.", time: "어제 14:03" },
-        { sender: 'user', text: "이젠 정말 학교 그만두고 자퇴하고 싶어요. 죽고싶다는 생각만 가득 차요.", time: "어제 14:04" }
+        { sender: 'assistant', text: "반가워! 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자. 😊", time: "방금 전" }
     ],
     optInStatus: null, // 'accepted' | 'denied' | null
     connectedStudents: [], // 대시보드 연계 리스트
@@ -25,7 +22,7 @@ const riskKeywordDictionary = {
     warning: ['망했어', '성적', '시험', '힘들어', '괴로워', '혼자', '소외', '가기 싫', '우울']
 };
 
-// 챗봇 응답 데이터베이스 (길이 축소)
+// 챗봇 응답 데이터베이스
 const botResponses = {
     greeting: "반가워! 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자. 😊",
     normal: [
@@ -35,7 +32,7 @@ const botResponses = {
     ],
     warning: [
         "요즘 공부나 성적 때문에 혼자 마음고생이 정말 많았구나... 😢 그동안 네 노력을 알아주지 못해 많이 속상하고 외로웠을 것 같아. 지금은 잠깐 숨을 고르고 쉬어가도 괜찮은 때야. 너무 조급해하지 말고 내가 늘 곁에 있어 줄게.",
-        "이야기를 들으니 마음의 걱정이 정말 무겁게 쌓여 있는 게 느껴져 걱정 돼. 성적 때문에 세상이 캄캄해 보일 수도 있지만, 이 순간의 힘듦이 너의 가치나 미래를 모두 결정하는 건 절대 아니야. 내가 같이 고민해 줄게.",
+        "이야기를 들으니 마음의 걱정이 정말 무겁게 쌓여 있는 게 느껴져 걱정이 돼. 성적 때문에 세상이 캄캄해 보일 수도 있지만, 이 순간의 힘듦이 너의 가치나 미래를 모두 결정하는 건 절대 아니야. 내가 같이 고민해 줄게.",
         "답답하고 불안한 감정이 나에게도 고스란히 전해되는 것 같아. 지금은 긴 터널 같겠지만 조금씩 마음을 털어놓다 보면 짐이 가벼워질 거야. 힘들 때는 언제든 나에게 기대서 마음껏 이야기해 줘."
     ],
     danger: [
@@ -168,8 +165,10 @@ function appendMessage(text, sender, callback) {
     wrapper.appendChild(time);
     messagesContainer.appendChild(wrapper);
 
-    // 대화 이력 누적 저장
-    state.chatHistory.push({ sender, text, time: formattedTime });
+    // 대화 이력 누적 저장 (동의 관련 안내 메시지는 누적 제외)
+    if (!text.includes("동의해줘서 고마워") && !text.includes("마음의 준비가 되지 않았을")) {
+        state.chatHistory.push({ sender, text, time: formattedTime });
+    }
 
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
@@ -219,7 +218,7 @@ function analyzeSentiment(text) {
 
     if (matchedDanger.length > 0) {
         state.detectedRiskLevel = 'Danger';
-        state.chatbotRiskScore += 45;
+        state.chatbotRiskScore = Math.min(state.chatbotRiskScore + 45, 100);
         matchedDanger.forEach(kw => {
             if (!state.detectedKeywords.includes(kw)) state.detectedKeywords.push(kw);
         });
@@ -227,13 +226,12 @@ function analyzeSentiment(text) {
         if (state.detectedRiskLevel !== 'Danger') {
             state.detectedRiskLevel = 'Warning';
         }
-        state.chatbotRiskScore += 20;
+        state.chatbotRiskScore = Math.min(state.chatbotRiskScore + 20, 100);
         matchedWarning.forEach(kw => {
             if (!state.detectedKeywords.includes(kw)) state.detectedKeywords.push(kw);
         });
     }
-
-    state.chatbotRiskScore = Math.min(state.chatbotRiskScore, 100);
+    // 감지 키워드가 없으면 일상적인 대화 상태 유지
 }
 
 function generateBotResponse() {
@@ -339,7 +337,7 @@ function loadInitialDemoData() {
     `;
     listContainer.appendChild(trPseudo);
 
-    // 데모 2: 실명 연계 학생 (김지훈)
+    // 데모 2: 실명 연계 학생 (김지훈 - 고정 데모)
     const trReal = document.createElement('tr');
     trReal.id = 'demo-real-row';
     trReal.innerHTML = `
@@ -351,7 +349,7 @@ function loadInitialDemoData() {
         <td><span class="tbl-badge warning" id="status-badge-demo-real-row">상담 대기</span></td>
         <td>
             <div style="display:flex; flex-direction:column; gap:6px;">
-                <button class="action-btn" style="background:var(--primary-color);" onclick="openDetailModal()"><i class="fa-solid fa-file-invoice"></i> 상세 보고서</button>
+                <button class="action-btn" style="background:var(--primary-color);" onclick="openDetailModal('demo')"><i class="fa-solid fa-file-invoice"></i> 상세 보고서</button>
                 <button class="action-btn" id="action-btn-demo-real-row" onclick="connectWeeClass('demo-real-row', '김지훈')"><i class="fa-solid fa-handshake-angle"></i> Wee클래스 연계</button>
             </div>
         </td>
@@ -556,7 +554,7 @@ function addStudentToDashboardConnection(isPseudonym) {
         statusColumn = `<span class="tbl-badge warning" id="status-badge-${tr.id}">상담 대기</span>`;
         actionButton = `
             <div style="display:flex; flex-direction:column; gap:6px;">
-                <button class="action-btn" style="background:var(--primary-color);" onclick="openDetailModal()"><i class="fa-solid fa-file-invoice"></i> 상세 보고서</button>
+                <button class="action-btn" style="background:var(--primary-color);" onclick="openDetailModal('realtime')"><i class="fa-solid fa-file-invoice"></i> 상세 보고서</button>
                 <button class="action-btn" id="action-btn-${tr.id}" onclick="connectWeeClass('${tr.id}', '${state.studentName}')"><i class="fa-solid fa-handshake-angle"></i> Wee클래스 연계</button>
             </div>
         `;
@@ -576,7 +574,7 @@ function addStudentToDashboardConnection(isPseudonym) {
             window.riskChart.update();
         }
 
-        triggerMacroAlert(`긴급 연계: [2학년 3반 김지훈] 학생으로부터 명시적 사전 동의(Opt-in)를 완료한 위기 연계 신호가 접수되었습니다.`);
+        triggerMacroAlert(`긴급 연계: [2학년 3반 지훈] 학생으로부터 명시적 사전 동의(Opt-in)를 완료한 위기 연계 신호가 접수되었습니다.`);
     }
 
     tr.innerHTML = `
@@ -613,56 +611,87 @@ window.connectWeeClass = function(rowId, studentName) {
 };
 
 // ==========================================================================
-// 4. 상세 보고서 모달 관리 로직
+// 4. 상세 보고서 모달 관리 로직 (정적 데모와 실시간 연동 분리)
 // ==========================================================================
-window.openDetailModal = function() {
+window.openDetailModal = function(type) {
     const modal = document.getElementById('detail-modal');
     modal.classList.add('open');
 
-    document.getElementById('detail-student-info').innerText = `${state.studentGradeClass} ${state.studentName}`;
-    
-    const badge = document.getElementById('detail-risk-badge');
-    badge.innerText = state.detectedRiskLevel === 'Danger' ? '고위험' : '중위험';
-    badge.className = `tbl-badge ${state.detectedRiskLevel === 'Danger' ? 'danger' : 'warning'}`;
+    let name = "";
+    let riskLevel = "";
+    let riskScore = 0;
+    let keywords = [];
+    let prescriptionText = "";
+    let historyHtml = "";
 
-    document.getElementById('detail-risk-score').innerText = `${state.chatbotRiskScore} / 100`;
-    document.getElementById('detail-risk-progress').style.width = `${state.chatbotRiskScore}%`;
-
-    const kwList = document.getElementById('detail-keywords-list');
-    kwList.innerHTML = state.detectedKeywords.map(kw => `<span class="keyword-tag">${kw}</span>`).join('') || '<span class="text-light">감지 키워드 없음</span>';
-
-    const prescription = document.getElementById('detail-ai-prescription');
-    if (state.detectedRiskLevel === 'Danger') {
-        prescription.innerHTML = `학생이 <strong>'${state.detectedKeywords.join(', ')}'</strong> 등 극단적/학업중단 우려 단어를 반복적으로 발화하고 있습니다. 감정적 붕괴 수준이 임계치(80점)를 초과하여 자퇴 도미노의 '초기 징후(Early Stage)'가 뚜렷이 포착되었습니다. <strong>즉각적인 대면 면담 및 보호자 연락, Wee 클래스 정밀 진단 연계를 강력히 권고합니다.</strong>`;
+    if (type === 'demo') {
+        // 김지훈 정적 데모 데이터
+        name = "2학년 3반 김지훈";
+        riskLevel = "Danger";
+        riskScore = 88;
+        keywords = ['자퇴', '죽고싶다', '포기'];
+        prescriptionText = `학생이 <strong>'자퇴, 죽고싶다, 포기'</strong> 등 극단적/학업중단 우려 단어를 반복적으로 발화하고 있습니다. 감정적 붕괴 수준이 임계치(80점)를 초과하여 자퇴 도미노의 '초기 징후(Early Stage)'가 뚜렷이 포착되었습니다. <strong>즉각적인 대면 면담 및 보호자 연락, Wee 클래스 정밀 진단 연계를 강력히 권고합니다.</strong>`;
+        
+        const demoHistory = [
+            { sender: 'assistant', text: "반가워! 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자. 😊", time: "어제 14:02" },
+            { sender: 'user', text: "요즘 시험 성적이 너무 떨어져서 괴로워요. 다 포기하고 싶어요.", time: "어제 14:03" },
+            { sender: 'assistant', text: "우리 지훈이, 이번 시험 때문에 마음고생이 정말 많았구나. 밤새며 노력한 거 다 아는데 결과가 안 나와 속상했겠어.", time: "어제 14:03" },
+            { sender: 'user', text: "이젠 정말 학교 그만두고 자퇴하고 싶어요. 죽고싶다는 생각만 가득 차요.", time: "어제 14:04" }
+        ];
+        
+        historyHtml = demoHistory.map(msg => `
+            <div class="history-msg-wrapper ${msg.sender}">
+                <div class="history-bubble">${msg.text}</div>
+                <span class="history-time">${msg.time}</span>
+            </div>
+        `).join('');
     } else {
-        prescription.innerHTML = `학생이 학업 부진 및 소외감으로 인해 중등도의 불안 상태를 겪고 있습니다. 성적 하락에 따른 '학업 포기' 키워드가 감지되었습니다. <strong>정기적인 관찰 상담 및 Wee 클래스 멘토링 프로그램 매칭을 권장합니다.</strong>`;
+        // 실시간 사용자 상담 데이터
+        name = `${state.studentGradeClass} ${state.studentName}`;
+        riskLevel = state.detectedRiskLevel;
+        riskScore = state.chatbotRiskScore;
+        keywords = state.detectedKeywords;
+        
+        if (state.detectedRiskLevel === 'Danger') {
+            prescriptionText = `학생이 <strong>'${state.detectedKeywords.join(', ')}'</strong> 등 극단적 우려 키워드를 발화했습니다. 감정적 상태가 매우 취약하므로, <strong>즉각적인 전문 Wee 클래스 상담 매칭 및 밀착 대면 관찰을 강력히 권고합니다.</strong>`;
+        } else if (state.detectedRiskLevel === 'Warning') {
+            prescriptionText = `학생이 학업이나 교우 관계로 인해 무력감과 불안(중위험)을 겪고 있습니다. <strong>주기적인 정서 관찰 및 Wee 클래스 상담 멘토링 매칭을 권장합니다.</strong>`;
+        } else {
+            prescriptionText = `정상 대화가 감지되고 있습니다. 현재 특이 위기 징후는 발견되지 않았으나, <strong>안정적 성장을 돕기 위한 지속적인 교실 정서 모니터링이 유효합니다.</strong>`;
+        }
+
+        historyHtml = state.chatHistory.map(msg => `
+            <div class="history-msg-wrapper ${msg.sender}">
+                <div class="history-bubble">${msg.text}</div>
+                <span class="history-time">${msg.time}</span>
+            </div>
+        `).join('');
     }
 
-    const historyContainer = document.getElementById('detail-chat-history');
-    historyContainer.innerHTML = '';
-
-    state.chatHistory.forEach(msg => {
-        const msgWrapper = document.createElement('div');
-        msgWrapper.className = `history-msg-wrapper ${msg.sender}`;
-
-        const bubble = document.createElement('div');
-        bubble.className = 'history-bubble';
-        bubble.innerText = msg.text;
-
-        const time = document.createElement('span');
-        time.className = 'history-time';
-        time.innerText = msg.time;
-
-        msgWrapper.appendChild(bubble);
-        msgWrapper.appendChild(time);
-        historyContainer.appendChild(msgWrapper);
-    });
+    document.getElementById('detail-student-info').innerText = name;
     
+    const badge = document.getElementById('detail-risk-badge');
+    badge.innerText = riskLevel === 'Danger' ? '고위험' : (riskLevel === 'Warning' ? '중위험' : '안정');
+    badge.className = `tbl-badge ${riskLevel === 'Danger' ? 'danger' : (riskLevel === 'Warning' ? 'warning' : 'safe')}`;
+
+    document.getElementById('detail-risk-score').innerText = `${riskScore} / 100`;
+    document.getElementById('detail-risk-progress').style.width = `${riskScore}%`;
+
+    const kwList = document.getElementById('detail-keywords-list');
+    kwList.innerHTML = keywords.map(kw => `<span class="keyword-tag">${kw}</span>`).join('') || '<span class="text-light">감지 키워드 없음</span>';
+
+    document.getElementById('detail-ai-prescription').innerHTML = prescriptionText;
+
+    const historyContainer = document.getElementById('detail-chat-history');
+    historyContainer.innerHTML = historyHtml;
     historyContainer.scrollTop = historyContainer.scrollHeight;
 
+    // 푸터 연계 버튼 바인딩
     const footer = document.getElementById('detail-modal-footer');
-    const rowId = document.querySelector('#connection-list tr').id;
-    const isAlreadyConnected = state.connectedStudents.includes(state.studentName) && document.getElementById(`status-badge-${rowId}`).innerText === '연계 완료';
+    const rows = document.querySelectorAll('#connection-list tr');
+    const rowId = rows.length > 0 ? rows[0].id : 'demo-real-row';
+    const targetRowId = type === 'demo' ? 'demo-real-row' : rowId;
+    const isAlreadyConnected = type === 'demo' ? (document.getElementById(`status-badge-demo-real-row`).innerText === '연계 완료') : (state.connectedStudents.includes(state.studentName) && document.getElementById(`status-badge-${rowId}`) && document.getElementById(`status-badge-${rowId}`).innerText === '연계 완료');
 
     if (isAlreadyConnected) {
         footer.innerHTML = `
@@ -672,7 +701,7 @@ window.openDetailModal = function() {
     } else {
         footer.innerHTML = `
             <button class="btn btn-secondary" onclick="closeDetailModal()">닫기</button>
-            <button class="btn btn-primary" onclick="connectWeeClass('${rowId}', '${state.studentName}'); closeDetailModal();"><i class="fa-solid fa-handshake-angle"></i> 즉시 Wee클래스 연계</button>
+            <button class="btn btn-primary" onclick="connectWeeClass('${targetRowId}', '${type === 'demo' ? '김지훈' : state.studentName}'); closeDetailModal();"><i class="fa-solid fa-handshake-angle"></i> 즉시 Wee클래스 연계</button>
         `;
     }
 };
