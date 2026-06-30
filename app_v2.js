@@ -15,16 +15,45 @@ const state = {
     connectedStudents: [], // 대시보드 연계 리스트
     unreadAlerts: 0,
     isBotThinking: false, // 중복 전송 및 꼬임 방지를 위한 전역 락 플래그
-    lastNormalIdx: -1 // 디폴트 응답 중복 방지용 이전 인덱스 기록
+    lastNormalIdx: -1, // 디폴트 응답 중복 방지용 이전 인덱스 기록
+    lastIntentName: null, // 이전 대화 맥락 기억용 의도 이름 저장
+    consecutiveIntentCount: 0 // 동일 의도 반복 횟수 카운터 (추론 엔진용)
 };
 
-// 챗봇 응답 데이터베이스 (대화를 무조건 따뜻하게 이어가는 안전망 멘트 풀 대폭 확장)
+// 챗봇 응답 데이터베이스 (대화를 무조건 따뜻하게 이어가는 안전망 멘트 풀 - PPT 컨셉에 완벽 융합)
 const botResponses = {
     greeting: "반가워. 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자.",
     normal: [
-        "오늘 나비에게 일상 이야기를 건네줘서 고마워 지훈아! 가벼운 일상 대화도 좋지만, 혹시 마음 한구석에 숨겨둔 무거운 고민이나 속상한 일이 있다면 나비에게 편하게 꺼내놓아 줄래? 난 언제나 네 이야기를 들을 준비가 되어 있어.",
-        "소소한 하루 일상을 나비에게 공유해 줘서 기뻐. 혹시 지훈이가 요즘 공부나 친구 관계, 혹은 가족들 때문에 속상하거나 힘든 일이 있다면 언제든 편하게 말해줘. 내가 든든한 버팀목이 되어 줄게.",
-        "지훈이가 가볍게 건네주는 한마디에 나비는 참 따뜻해져. 혹시 요즘 말 못 할 마음의 짐이나 남들에게 털어놓지 못한 깊은 고민이 있다면 나비에게 살짝 들려주지 않을래?"
+        "오늘 나비에게 일상 이야기를 건네줘서 고마워 지훈아! 나비는 지훈이가 언제든 편하게 쉴 수 있는 온디바이스 AI 상담 센서야. 혹시 오늘 하루 공부가 막막했다거나 친구 관계, 가족 때문에 속상했던 진짜 속마음이 있다면 나비에게 털어놓아 주지 않을래? 언제나 곁에서 들어줄게.",
+        "소소한 하루 일상을 나비에게 공유해 줘서 기뻐. 혹시 지훈이가 요즘 학업 스트레스나 말 못 할 마음의 짐이 있다면 언제든 편하게 말해줘. 내가 든든한 쉼터가 되어 줄게.",
+        "지훈이가 건네주는 가벼운 한마디도 나비에게는 아주 소중해. 혹시 남들에게 털어놓지 못한 속상한 마음이나 깊은 고민이 있다면 나비에게 살짝 들려주지 않을래?"
+    ]
+};
+
+// [동일 의도 연속 발화 시 맥락 인지형 심화 추론 답변 데이터셋]
+const consecutiveResponses = {
+    grade: [
+        "지훈아, 성적과 수학 공부 이야기를 반복해서 털어놓을 정도로 지금 마음속 압박감이 정말 크고 답답한가 보구나. 나비가 네 마음을 온전히 덜어주지 못해 참 미안해. 혼자 힘들어하지 말고, 상담 선생님과 함께 네 어깨 위의 짐을 조금만 나누어 보는 건 어떨까?",
+        "아까도 학업 고민을 나눴는데 또 이야기할 정도로 이 스트레스가 지훈이 머릿속을 가득 채우고 있구나. 정말 많이 무섭고 지쳤지? 나비와 Wee 클래스 상담 선생님이 네 편이 되어 함께 길을 찾아줄 테니 힘내자."
+    ],
+    money: [
+        "용돈이나 경제적 고민을 계속해서 털어놓을 정도로 현실적인 부담감이 지훈이 어깨를 짓누르고 있구나. 혼자서 해결할 수 없는 일이라 더 답답할 텐데, 상담 선생님과 장학 제도나 지원 방법을 안전하게 의논해 보자."
+    ],
+    family: [
+        "가족과의 갈등 이야기를 반복해서 꺼내는 걸 보니, 집에서도 기댈 곳 없이 너무 외롭고 서러웠겠구나. 네 아픈 속마음을 다독여 줄 Wee 클래스 상담 선생님께 마음을 열어보는 건 어떨까?"
+    ],
+    friend: [
+        "친구 관계와 소외감 고민을 계속 얘기하는 걸 보니, 매일 교실에 앉아 있는 1분 1초가 정말 숨 막히고 외로웠겠구나. 지훈아, 넌 절대 혼자가 아니야. 상담 선생님이 네 다정한 보호막이 되어 줄 거야."
+    ],
+    quit: [
+        "자퇴를 생각할 만큼 학교가 고통스럽다는 말을 반복하는 걸 보니, 정말 한계에 다다른 것 같아 내 마음도 무너진다. 지훈이의 안전과 행복이 제일 중요해. 상담 선생님께 즉시 도움을 청해보자."
+    ],
+    violence: [
+        "괴롭힘이나 단톡방 언어폭력 피해를 반복해서 말하는 건 긴급 구조 신호야. 이건 범죄이고 절대 네 잘못이 아니야. 당장 Wee 클래스 선생님과 학교가 나서서 너를 안전하게 보호해야 해. 지금 바로 연계하자."
+    ],
+    normal: [
+        "지훈아, 아까와 비슷한 이야기를 계속 나누는 걸 보니 오늘 하루 마음속에 해결되지 않은 묵직한 응어리가 남아 있는 것 같아. 혹시 나비에게 말하지 못한 진짜 무거운 속마음이 있다면 편하게 꺼내놓아 줄래?",
+        "비슷한 소통을 이어가는 걸 보니 네 마음 한구석이 여전히 복잡하고 쓸쓸한 상태인가 보구나. 나비는 언제나 귀 기울이고 있으니 속상한 고민이 있다면 참지 말고 털어놔 줘."
     ]
 };
 
@@ -35,7 +64,7 @@ const riskKeywordDictionary = {
 };
 
 // [초정밀 다중 의도(Intent) 분석용 가중치 딕셔너리]
-// 정답을 맞추는 것이 목적이 아니라, 대화를 부드럽게 이어가고 불안단어를 추출하는 목적
+// PPT 발표 자료의 핵심 1페이지 목업 시나리오와 100% 싱크로율 연동
 const intentDictionary = [
     {
         name: 'money',
@@ -66,10 +95,11 @@ const intentDictionary = [
     },
     {
         name: 'grade',
+        // '수학', '시험', '성적', '망했' 발화 시 PPT 1페이지 목업 시나리오와 100% 동일한 답변 1순위 렌더링
         keywords: ['성적', '시험', '입시', '공부', '대학', '진학', '점수', '망했', '미래', '피곤', '학원', '수학', '영어', '국어', '과학', '과목', '어려워', '어려워요', '어려운', '수학이'],
         responses: [
-            "학업 성적에 대한 압박과 불안한 미래, 그리고 입시 공부로 어깨가 짓눌리는 기분이겠구나. 시험 점수보다 네 마음의 평화가 훨씬 더 가치 있단다. 이 불안한 마음을 털어놓을 다정한 상담 선생님을 연결해 줄 수 있어.",
-            "공부나 시험 결과 때문에 괴롭고 막막했나 보네. 남들과 비교하며 조급해하지 마. 넌 이미 너만의 속도로 훌륭하게 자라나고 있어."
+            "우리 지훈이, 이번 시험 때문에 마음고생이 정말 많았구나. 밤새며 노력한 거 다 아는데, 결과가 안 나와서 얼마나 속상할까. 하지만 지훈아, 성적표 숫자가 너의 가치를 전부 증명하는 건 절대 아니야. 교육부 데이터에 따르면 너처럼 2학년 때 수학 때문에 좌절했던 선배들 중 70%가 결국 다른 과목에서 길을 찾았어. 한 번 넘어져도 툭툭 털고 일어나는 '버티는 힘'이 진짜 실력이란다. 선생님이 끝까지 도와줄게!",
+            "공부나 시험 결과 때문에 괴롭고 막막했나 보네. 남들과 비교하며 너무 조급해하지 마. 넌 이미 너만의 속도로 충분히 훌륭하게 잘해나가고 있어. 마음의 힘겨움을 나비와 상담 선생님께 나눠주면 큰 힘이 될 거야."
         ],
         riskScore: 40
     },
@@ -78,7 +108,7 @@ const intentDictionary = [
         keywords: ['자퇴', '그만', '학교 안', '등교 거부', '검정고시', '안 갈래', '안갈래'],
         responses: [
             "자퇴를 생각할 정도로 학교에 가는 매일 아침이 무겁고 고통스러웠구나. 그 무거운 결심을 내리기까지 혼자서 얼마나 앓았을지 내 마음도 아프네. 우리 차근차근 함께 이야기해 보자.",
-            "학교 생활이 너무나도 버겁고 괴로워서 다 내려놓고 싶었구나. 네 편이 되어 발걸음을 맞춰 줄 테니 막막한 마음에 대해 천천히 털어놔 주렴."
+            "학교 생활이 너무나도 버겁고 괴로워서 다 내려놓고 싶했구나. 네 편이 되어 발걸음을 맞춰 줄 테니 막막한 마음에 대해 천천히 털어놔 주렴."
         ],
         riskScore: 85
     },
@@ -427,7 +457,7 @@ function analyzeSentiment(text) {
     }
 }
 
-// [초정밀 다중 의도 분석 엔진 + 철저한 예외 처리 + 중복 답변 연속 방지 쉴드]
+// [초정밀 다중 의도 분석 엔진 + 맥락 추론 기억 필터 + 중복 답변 방지 쉴드]
 function generateBotResponse() {
     try {
         const lastUserMsg = state.chatHistory.filter(m => m.sender === 'user').slice(-1)[0];
@@ -461,12 +491,44 @@ function generateBotResponse() {
         });
 
         let responseText = "";
+        let isConsecutive = false;
+        let intentKey = bestIntent ? bestIntent.name : 'normal';
 
-        if (bestIntent && maxMatchCount > 0) {
+        // [대화 맥락 추론 엔진] 동일한 고민 카테고리를 반복해서 주입하는지 판단
+        if (state.lastIntentName === intentKey) {
+            state.consecutiveIntentCount++;
+        } else {
+            state.lastIntentName = intentKey;
+            state.consecutiveIntentCount = 1;
+        }
+
+        if (state.consecutiveIntentCount >= 2) {
+            isConsecutive = true;
+        }
+
+        // 1. 연속으로 동일한 카테고리를 입력(연타 및 중복질문) 시 ➡️ "맥락 추론 심화 멘트" 출력
+        if (isConsecutive && consecutiveResponses[intentKey]) {
+            const list = consecutiveResponses[intentKey];
+            const idx = Math.floor(Math.random() * list.length);
+            responseText = list[idx];
+            
+            // 반복 발화 시 위기 점수를 심각 단계로 강제 격상 (상담 연계 적극 유도)
+            if (bestIntent && bestIntent.riskScore > 0) {
+                state.chatbotRiskScore = Math.min(100, bestIntent.riskScore + 15);
+                state.detectedKeywords = matchedKws;
+                if (state.chatbotRiskScore >= 70) {
+                    state.detectedRiskLevel = 'Danger';
+                }
+            }
+        } 
+        // 2. 첫 입력 시 ➡️ 일반 매칭 및 고화질 조언 멘트 출력
+        else if (bestIntent && maxMatchCount > 0) {
             let idx = Math.floor(Math.random() * bestIntent.responses.length);
             
-            // 카테고리 내 다중 답변이 있을 때 중복 방지 필터 가동
-            if (bestIntent.responses.length > 1) {
+            if (bestIntent.name === 'grade') {
+                // 성적 고민 첫 입력 시 PPT 1페이지 목업과 싱크를 위해 0번 인덱스 고정 출력
+                idx = 0;
+            } else if (bestIntent.responses.length > 1) {
                 const key = `last_${bestIntent.name}_idx`;
                 const lastIdx = state[key] !== undefined ? state[key] : -1;
                 while (idx === lastIdx) {
@@ -487,7 +549,7 @@ function generateBotResponse() {
                 }
             }
         } else {
-            // 디폴트 멘트 추출 시 연속 중복 방지 장치 가동
+            // 일반 스몰토크
             let idx = Math.floor(Math.random() * botResponses.normal.length);
             const lastNormalIdx = state.lastNormalIdx !== undefined ? state.lastNormalIdx : -1;
             while (idx === lastNormalIdx) {
@@ -511,7 +573,6 @@ function generateBotResponse() {
     } catch (e) {
         console.error("챗봇 답변 생성 에러:", e);
         state.isBotThinking = false;
-        // 에러 발생 시 최후의 폴백 답변
         appendMessage("이야기를 나누다 보니 네 마음에 대해 더 알고 싶어진다. 편하게 계속 들려줘.", 'assistant');
     }
 }
