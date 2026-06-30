@@ -25,23 +25,23 @@ const riskKeywordDictionary = {
     warning: ['망했어', '성적', '시험', '힘들어', '괴로워', '혼자', '소외', '가기 싫', '우울']
 };
 
-// 챗봇 응답 데이터베이스
+// 챗봇 응답 데이터베이스 (길이 축소)
 const botResponses = {
     greeting: "반가워! 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자. 😊",
     normal: [
-        "그렇구나! 오늘 하루를 무탈하고 평온하게 잘 보냈다니 내 마음도 참 놓이고 다행이야. 사소해 보이는 일상이라도 이렇게 나에게 조근조근 들려줘서 정말 고마워. 혹시 오늘 하루 중에 가장 기억에 남거나 네 마음을 살짝 미소 짓게 만든 즐거웠던 순간이 있었어? 사소한 이야기라도 좋으니 조금만 더 얘기해 주면 좋겠어! 😊",
-        "소중한 일상 이야기를 다정하게 나누어 줘서 정말 고마워. 지훈이랑 대화하고 있으면 덩달아 나까지 마음이 편안해지고 따뜻해지는 기분이 들어. 혹시 요즘 일상 중에서 마음 한구석에 자꾸 쓰이거나 신경 쓰이는 사소한 고민, 혹은 공부하느라 몸과 마음이 조금 피곤한 부분은 없니? 언제든 편안하게 나에게 털어놓아 줘.",
-        "응응, 그렇구나! 네가 어떤 상황에 있든, 어떤 기분이든 상관없이 나는 항상 이곳에서 너의 이야기를 귀 기울여 들을 준비가 되어 있어. 매일 반복되는 평범한 하루 속에서도 너만의 소중한 걸음들을 걷고 있다는 걸 잊지 마. 혹시 오늘 나에게 들려주고 싶은 다른 이야기가 있다면 언제든 편하게 말해줘."
+        "오늘 하루를 무탈하게 보냈다니 정말 다행이야! 나에게 들려주고 싶은 소소한 일상이나 오늘 가장 즐거웠던 순간이 있으면 편하게 얘기해 줘. 😊",
+        "소중한 일상을 나눠줘서 정말 고마워. 너랑 대화하고 있으면 내 마음도 참 따뜻해져. 요즘 혹시 마음 한구석에 자꾸 쓰이는 고민이나 피곤한 부분은 없니?",
+        "어떤 이야기든 귀 기울여 들을 준비가 되어 있어. 매일 조금씩 성장하는 너를 항상 응원해. 오늘 또 하고 싶은 이야기가 있으면 편하게 말해줘!"
     ],
     warning: [
-        "요즘 공부나 성적, 혹은 여러 가지 고민 때문에 혼자서 끙끙 앓느라 마음고생이 정말 많았겠구나... 😢 네가 그동안 얼마나 성실하게 노력해 왔는지 주변에서 다 알아주지 못하는 것 같아 속상하고 외로웠을 것 같아. 하지만 지훈아, 네가 겪어내는 이 힘든 과정은 결코 헛되지 않아. 지금은 열심히 달리느라 방전된 마음을 위해 잠깐 숨을 고르고 쉬어가도 괜찮은 때야. 너무 조급해하지 말고, 내가 늘 네 편이 되어 곁에 있어 줄 테니 조금만 편안하게 생각하자.",
-        "보내준 이야기를 읽어보니 마음의 스트레스와 걱정이 무겁게 쌓여 있는 것 같아 참 안타깝고 걱정이 돼. 성적이나 미래에 대한 막연한 불안감이 눈앞을 가릴 때는 온 세상이 캄캄하고 나만 뒤처지는 것 같은 기분이 들지. 하지만 지훈아, 지금 이 순간의 힘듦이 너의 가치나 미래의 전부를 결정하지는 않아. 네 진심을 다정하게 들어주고 힘이 되어주고 싶어 하는 사람들이 네 곁에 분명히 있단다. 네가 한 걸음 더 편안해질 수 있도록 내가 늘 같이 고민해 줄게.",
-        "마음이 답답하고 불안한 감정이 나한테까지 고스란히 전해지는 것 같아. 지금 겪고 있는 상황이 막막하고 해결책이 보이지 않는 긴 터널처럼 느껴지겠지만, 혼자서 고민하기보다 조금씩이라도 밖으로 꺼내놓다 보면 마음의 짐이 한결 가벼워지고 해결할 방법도 서서히 보이기 시작할 거야. 힘들 때는 언제든 나에게 기대서 마음껏 네 마음을 표현해 줘. 난 언제나 네 편이야."
+        "요즘 공부나 성적 때문에 혼자 마음고생이 정말 많았구나... 😢 그동안 네 노력을 알아주지 못해 많이 속상하고 외로웠을 것 같아. 지금은 잠깐 숨을 고르고 쉬어가도 괜찮은 때야. 너무 조급해하지 말고 내가 늘 곁에 있어 줄게.",
+        "이야기를 들으니 마음의 걱정이 정말 무겁게 쌓여 있는 게 느껴져 걱정 돼. 성적 때문에 세상이 캄캄해 보일 수도 있지만, 이 순간의 힘듦이 너의 가치나 미래를 모두 결정하는 건 절대 아니야. 내가 같이 고민해 줄게.",
+        "답답하고 불안한 감정이 나에게도 고스란히 전해되는 것 같아. 지금은 긴 터널 같겠지만 조금씩 마음을 털어놓다 보면 짐이 가벼워질 거야. 힘들 때는 언제든 나에게 기대서 마음껏 이야기해 줘."
     ],
     danger: [
-        "지훈아, 그런 무겁고 극단적인 생각이 머릿속을 맴돌 정도로 지금 너의 마음이 얼마나 깊은 절망과 고통 속에 있을지 감히 상상조차 하기 어렵구나... 😭 그 큰 아픔과 외로움을 혼자서 꾹 참고 감당해 내느라 얼마나 무섭고 지쳤을까. 먼저 용기 내어 나에게 이 아픈 속마음을 털어놓아 주어서 정말 고마워. 절대 네 잘못이 아니야. 세상에 너 혼자 남겨진 것 같아도 너를 진심으로 돕고 따뜻하게 지켜주고 싶어 하는 다정한 상담 선생님(Wee 클래스)이 여기 계셔. 우리 천천히 손을 맞잡고 이 힘든 시기를 함께 헤쳐 나가보자. 넌 절대로 혼자가 아니란다. 💜",
-        "지금 당장 모든 걸 내려놓고 싶고, 자퇴하고 싶다는 생각이 들 만큼 매일이 버겁고 숨 막히는 시간이었구나... 많이 외롭고 지쳤을 지훈이에게 내 따뜻한 위로와 응원이 꼭 닿기를 바래. 아무것도 해결되지 않을 것 같고 두렵겠지만, 인생에는 우리가 생각하는 것보다 정말 다양하고 아름다운 길들이 존재하고, 너를 소중히 여기며 지탱해 줄 안전망이 있어. 선생님도 네가 이 힘든 터널을 무사히 빠져나갈 때까지 끝까지 옆에서 발걸음을 맞추며 도와줄게. 더 하고 싶은 이야기가 있다면 무엇이든 좋으니 조금만 더 털어놓아 주지 않을래?",
-        "얼마나 깊은 상처와 말 못 할 아픔이 있었으면 그런 선택까지 떠올리게 되었을지 마음이 너무 먹먹하고 아파. 지훈아, 이 세상 그 무엇보다 가장 소중한 건 바로 너 자신이야. 더 이상 혼자서 버거워하며 눈물 흘리지 않도록, 나에게 조금만 더 손을 뻗어줘. 네 고민 요약본을 안전하게 Wee 클래스의 따뜻한 상담 선생님께 전달해서 함께 이야기를 나누어 보는 건 어떨까? 선생님이 다정한 차 한 잔과 함께 네 힘든 어깨를 꼭 안아주실 거야. 꼭 도와줄 테니 함께해 줘."
+        "지훈아, 극단적인 생각이 들 정도로 지금 너무나 깊은 고통 속에 있구나... 😭 그 큰 아픔을 혼자 견뎌내느라 얼마나 무섭고 외로웠을까. 절대 네 잘못이 아니야. 너를 도울 다정한 상담 선생님이 계시니 우리 같이 힘을 내보자. 넌 혼자가 아니야. 💜",
+        "자퇴하고 싶을 만큼 매일이 버겁고 숨이 막혔다니 내 마음도 참 아프다... 아무것도 해결되지 않을 것 같고 두렵겠지만, 인생에는 정말 다양한 길들이 있고 너를 도울 안전망이 있어. 내가 끝까지 곁에서 발걸음을 맞춰줄게. 더 얘기해 줄 수 있니?",
+        "얼마나 큰 상처가 있었으면 그런 힘든 생각을 떠올리게 되었을까... 지훈아, 너는 세상 무엇보다 소중해. 더는 혼자 아파하지 않도록 우리 Wee 클래스 상담 선생님께 고민을 살짝 털어놓고 다정하게 도움을 받아보는 건 어떨까?"
     ]
 };
 
@@ -66,11 +66,9 @@ function initTabs() {
             const targetTab = btn.getAttribute('data-tab');
             state.activeTab = targetTab;
 
-            // 버튼 활성화 클래스 변경
             tabButtons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            // 콘텐츠 토글
             tabContents.forEach(content => {
                 if (content.getAttribute('id') === `${targetTab}-view`) {
                     content.classList.add('active');
@@ -79,10 +77,8 @@ function initTabs() {
                 }
             });
 
-            // 교사용 대시보드로 이동 시 알림 배지 리셋
             if (targetTab === 'teacher') {
                 resetAlertBadge();
-                // Chart.js 리사이즈 버그 방지
                 if (window.riskChart) {
                     window.riskChart.resize();
                 }
@@ -116,17 +112,14 @@ function initChatbot() {
     const sendBtn = document.getElementById('send-btn');
     const scenarioBtns = document.querySelectorAll('.scenario-btn');
 
-    // 전송 버튼 클릭
     sendBtn.addEventListener('click', handleUserSendMessage);
 
-    // 엔터키 전송
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             handleUserSendMessage();
         }
     });
 
-    // 시나리오 클릭 자동 입력
     scenarioBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const text = btn.getAttribute('data-text');
@@ -135,7 +128,6 @@ function initChatbot() {
         });
     });
 
-    // 모달 승인 및 거부 이벤트
     document.getElementById('optin-accept-btn').addEventListener('click', handleOptInAccept);
     document.getElementById('optin-deny-btn').addEventListener('click', handleOptInDeny);
 }
@@ -146,27 +138,23 @@ function handleUserSendMessage() {
 
     if (!text) return;
 
-    // 1. 화면에 사용자 메시지 출력
     appendMessage(text, 'user');
     chatInput.value = '';
 
-    // 2. 키워드 기반 감성 분석 및 위기 점수 가산
     analyzeSentiment(text);
 
-    // 3. AI 답변 생성 딜레이 시뮬레이션
     setTimeout(() => {
         generateBotResponse();
     }, 800);
 }
 
-function appendMessage(text, sender) {
+function appendMessage(text, sender, callback) {
     const messagesContainer = document.getElementById('chat-messages');
     const wrapper = document.createElement('div');
     wrapper.className = `message-wrapper ${sender}`;
 
     const bubble = document.createElement('div');
     bubble.className = 'message-bubble';
-    bubble.innerText = text;
 
     const time = document.createElement('span');
     time.className = 'message-time';
@@ -183,29 +171,55 @@ function appendMessage(text, sender) {
     // 대화 이력 누적 저장
     state.chatHistory.push({ sender, text, time: formattedTime });
 
-    // 자동 스크롤
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    if (sender === 'assistant') {
+        // 챗봇 답변 시 실제 타자 치는 연출 (Typing Effect)
+        chatInput.disabled = true;
+        sendBtn.disabled = true;
+        chatInput.placeholder = "나비가 답변을 작성하고 있습니다...";
+
+        let index = 0;
+        bubble.innerText = '';
+        
+        const interval = setInterval(() => {
+            if (index < text.length) {
+                bubble.innerText += text[index];
+                index++;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            } else {
+                clearInterval(interval);
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                chatInput.placeholder = "여기에 고민이나 이야기를 입력해보세요...";
+                chatInput.focus();
+                
+                if (callback) callback();
+            }
+        }, 22); // 22ms 간격으로 출력
+    } else {
+        bubble.innerText = text;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        if (callback) callback();
+    }
 }
 
-// 감성 분석 시뮬레이션 엔진
 function analyzeSentiment(text) {
     let matchedDanger = [];
     let matchedWarning = [];
 
-    // 위험 키워드 매칭
     riskKeywordDictionary.danger.forEach(kw => {
         if (text.includes(kw)) matchedDanger.push(kw);
     });
 
-    // 중위험 키워드 매칭
     riskKeywordDictionary.warning.forEach(kw => {
         if (text.includes(kw)) matchedWarning.push(kw);
     });
 
-    // 실시간 상태 업데이트
     if (matchedDanger.length > 0) {
         state.detectedRiskLevel = 'Danger';
-        state.chatbotRiskScore += 45; // 고위험 가산
+        state.chatbotRiskScore += 45;
         matchedDanger.forEach(kw => {
             if (!state.detectedKeywords.includes(kw)) state.detectedKeywords.push(kw);
         });
@@ -213,7 +227,7 @@ function analyzeSentiment(text) {
         if (state.detectedRiskLevel !== 'Danger') {
             state.detectedRiskLevel = 'Warning';
         }
-        state.chatbotRiskScore += 20; // 중위험 가산
+        state.chatbotRiskScore += 20;
         matchedWarning.forEach(kw => {
             if (!state.detectedKeywords.includes(kw)) state.detectedKeywords.push(kw);
         });
@@ -222,7 +236,6 @@ function analyzeSentiment(text) {
     state.chatbotRiskScore = Math.min(state.chatbotRiskScore, 100);
 }
 
-// 봇 답변 및 팝업 트리거
 function generateBotResponse() {
     let responseText = "";
     const currentRisk = state.detectedRiskLevel;
@@ -238,43 +251,37 @@ function generateBotResponse() {
         responseText = pool[Math.floor(Math.random() * pool.length)];
     }
 
-    appendMessage(responseText, 'assistant');
-
-    // 위기도가 일정 수치(40점) 이상이거나 고위험 키워드가 발견되었고, 아직 Opt-in이 처리되지 않았다면 모달 팝업
-    if (state.chatbotRiskScore >= 40 && state.optInStatus === null) {
-        setTimeout(() => {
-            openOptInModal();
-        }, 1200);
-    }
+    // 타이핑 연출 적용 후 완료 콜백으로 모달 실행
+    appendMessage(responseText, 'assistant', () => {
+        if (state.chatbotRiskScore >= 40 && state.optInStatus === null) {
+            setTimeout(() => {
+                openOptInModal();
+            }, 800);
+        }
+    });
 }
 
-// Opt-in 팝업 오픈
 function openOptInModal() {
     const modal = document.getElementById('optin-modal');
     modal.classList.add('open');
 }
 
-// Opt-in 팝업 클로즈
 function closeOptInModal() {
     const modal = document.getElementById('optin-modal');
     modal.classList.remove('open');
 }
 
-// 동의 버튼 수락 클릭
 function handleOptInAccept() {
     state.optInStatus = 'accepted';
     closeOptInModal();
     
-    // AI 멘토 따뜻한 마무리 멘트
     setTimeout(() => {
         appendMessage("동의해줘서 고마워 지훈아. 네 마음이 담긴 상담 기록을 요약해서 Wee 클래스 담당 선생님께 비밀스럽고 안전하게 전송했어. 선생님이 조만간 따뜻한 차 한 잔과 함께 다정하게 말 걸어주실 거야. 그때까지만 조금만 힘내자. 💜", 'assistant');
     }, 500);
 
-    // 대시보드 리스트에 '실명 연계' 데이터로 전달
-    addStudentToDashboardConnection(false); // 비식별 아님 -> 실명으로 전달
+    addStudentToDashboardConnection(false);
 }
 
-// 동의 버튼 거부 클릭
 function handleOptInDeny() {
     state.optInStatus = 'denied';
     closeOptInModal();
@@ -283,15 +290,12 @@ function handleOptInDeny() {
         appendMessage("그래, 아직 마음의 준비가 되지 않았을 수도 있지. 걱정하지 마, 이 대화 내용은 외부로 노출되지 않고 가명 처리되어 안전하게 보관될 거야. 언제든지 도움의 손길이 필요하면 말해줘.", 'assistant');
     }, 500);
 
-    // 대시보드 리스트에는 들어가지 않지만, Macro 거시 통계 데이터에 가명 상태로 전달
-    addStudentToDashboardConnection(true); // 비식별(가명화) 처리하여 전달
+    addStudentToDashboardConnection(true);
 }
 
 // ==========================================================================
 // 3. 교사용 대시보드 뷰 로직 및 Chart.js 시각화
 // ==========================================================================
-
-// 초기 히트맵 데이터셋
 const initialHeatmapData = [
     { grade: 1, class: 1, val: 12 }, { grade: 1, class: 2, val: 5 }, { grade: 1, class: 3, val: 28 }, { grade: 1, class: 4, val: 8 },
     { grade: 1, class: 5, val: 15 }, { grade: 1, class: 6, val: 10 }, { grade: 1, class: 7, val: 3 }, { grade: 1, class: 8, val: 40 },
@@ -308,13 +312,11 @@ function initDashboard() {
     // 초기 데모 데이터 자동 로딩
     loadInitialDemoData();
     
-    // 주기적으로 Macro(거시) 공공데이터 경보 시뮬레이션 발생 (2초 후 최초 발생)
     setTimeout(() => {
         triggerMacroAlert("경보: 현재 [2학년 5반]에서 공교육 이탈(무단결석 누적) 위험 지수 임계치 초과. 선제적 상담 매칭이 권장됩니다.");
     }, 2000);
 }
 
-// 1-1. 초기 데모용 학생 데이터 로딩 (테스트 및 심사용)
 function loadInitialDemoData() {
     const listContainer = document.getElementById('connection-list');
     const emptyRow = document.getElementById('empty-table-row');
@@ -323,7 +325,7 @@ function loadInitialDemoData() {
         emptyRow.remove();
     }
 
-    // 데모 1: 가명 비식별 학생 (사전 동의 거부 시뮬레이션)
+    // 데모 1: 가명 비식별 학생
     const trPseudo = document.createElement('tr');
     trPseudo.id = 'demo-pseudo-row';
     trPseudo.innerHTML = `
@@ -337,7 +339,7 @@ function loadInitialDemoData() {
     `;
     listContainer.appendChild(trPseudo);
 
-    // 데모 2: 실명 연계 학생 (김지훈 - 사전 동의 완료 시뮬레이션)
+    // 데모 2: 실명 연계 학생 (김지훈)
     const trReal = document.createElement('tr');
     trReal.id = 'demo-real-row';
     trReal.innerHTML = `
@@ -356,22 +358,19 @@ function loadInitialDemoData() {
     `;
     listContainer.appendChild(trReal);
 
-    // 초기 상태 수치 연동
     state.connectedStudents.push('김지훈');
     document.getElementById('connected-count').innerText = `${state.connectedStudents.length}건 연계됨`;
 }
 
-// 1. Heatmap 그리드 동적 생성
 function renderHeatmap() {
     const grid = document.getElementById('risk-heatmap');
-    grid.innerHTML = ''; // 초기화
+    grid.innerHTML = '';
 
     initialHeatmapData.forEach(cell => {
         const cellEl = document.createElement('div');
         cellEl.className = 'heatmap-cell';
         cellEl.id = `cell-${cell.grade}-${cell.class}`;
 
-        // 위험도에 따라 클래스 바인딩 (Safe: 0-35, Warning: 36-70, Danger: 71+)
         let riskClass = 'cell-safe';
         if (cell.val > 70) {
             riskClass = 'cell-danger';
@@ -391,7 +390,6 @@ function renderHeatmap() {
         cellEl.appendChild(titleSpan);
         cellEl.appendChild(valSpan);
 
-        // 클릭 이벤트 추가 (오른쪽 그래프 실시간 연동)
         cellEl.addEventListener('click', () => {
             toggleHeatmapCellSelect(cell, cellEl);
         });
@@ -400,7 +398,6 @@ function renderHeatmap() {
     });
 }
 
-// 2. Chart.js 생성
 function renderChart() {
     const ctx = document.getElementById('riskTrendChart').getContext('2d');
     
@@ -471,7 +468,6 @@ function renderChart() {
     });
 }
 
-// 3. 거시적 경보 배너 트리거
 function triggerMacroAlert(message) {
     const container = document.getElementById('macro-alerts');
     const alert = document.createElement('div');
@@ -494,13 +490,11 @@ function triggerMacroAlert(message) {
     alert.appendChild(time);
     container.insertBefore(alert, container.firstChild);
 
-    // 알림 배지 숫자 카운트
     if (state.activeTab !== 'teacher') {
         updateAlertBadge(1);
     }
 }
 
-// 4. 학생 정보를 대시보드 리스트에 등록 (실명 수락 / 가명 거부 분기)
 function addStudentToDashboardConnection(isPseudonym) {
     const listContainer = document.getElementById('connection-list');
     const emptyRow = document.getElementById('empty-table-row');
@@ -520,14 +514,10 @@ function addStudentToDashboardConnection(isPseudonym) {
     let statusColumn = "";
     let actionButton = "";
 
-    // 키워드 뱃지 마크업 생성
     const keywordsHtml = state.detectedKeywords.map(kw => `<span class="keyword-tag">${kw}</span>`).join('');
-
-    // Triage 자동 상담 요약문
     const triageSummaryText = `${state.studentName} 학생은 최근 학업 관련 고충 및 무력감을 토로함. AI 상담 결과 '${state.detectedKeywords.join(', ')}' 등 우울 및 회피 징후 키워드가 대량 검출되어 Wee 클래스 밀착 개입 필요 권고.`;
 
     if (isPseudonym) {
-        // [CASE A] 거부(Opt-in 거부): 철저한 비식별 처리
         nameColumn = `<span class="tbl-badge safe"><i class="fa-solid fa-user-secret"></i> 가명 학생 (비식별)</span>`;
         classColumn = `2학년 (학반 비식별)`;
         riskLevelColumn = `<span class="tbl-badge warning">중위험</span>`;
@@ -536,29 +526,24 @@ function addStudentToDashboardConnection(isPseudonym) {
         statusColumn = `<span class="tbl-badge safe">거시 통계 누적</span>`;
         actionButton = `<button class="action-btn" style="background:#64748b;" onclick="alert('사전 동의(Opt-in)하지 않은 학생의 개별 데이터는 개인정보보호법에 의해 열람할 수 없습니다.')"><i class="fa-solid fa-lock"></i> 열람 불가</button>`;
 
-        // 공공데이터 패널 실시간 통계 업데이트
         document.getElementById('macro-drop-rate').innerText = "2학년 평균 자퇴 위험도 15% 증가";
         document.getElementById('macro-safety-index').innerText = "비식별 우울 징후 감지 건수 누적";
 
-        // 거시적 통계 업데이트 (히트맵 가중치 증가)
-        // 2학년 3반의 위기도를 +35 증가시킴 (학급 평균 수치 반영)
         const cellIndex = initialHeatmapData.findIndex(cell => cell.grade === 2 && cell.class === 3);
         if (cellIndex !== -1) {
             initialHeatmapData[cellIndex].val = Math.min(initialHeatmapData[cellIndex].val + 35, 100);
             renderHeatmap();
         }
 
-        // 2학년 전체 차트 선형 값 변경
         if (window.riskChart) {
-            const currentData = window.riskChart.data.datasets[1].data; // 2학년 데이터셋
-            currentData[currentData.length - 1] += 5; // 평균 상승
+            const currentData = window.riskChart.data.datasets[1].data;
+            currentData[currentData.length - 1] += 5;
             window.riskChart.update();
         }
 
         triggerMacroAlert("시스템 경보: [2학년 영역]에서 비식별 위험 학생 징후 1건이 가명 처리되어 통계에 추가되었습니다. 2학년 대상 학급 케어 주간 편성이 권장됩니다.");
 
     } else {
-        // [CASE B] 수락(Opt-in 승인): 실명 연결
         nameColumn = `<strong>${state.studentName}</strong>`;
         classColumn = `${state.studentGradeClass}`;
         
@@ -576,25 +561,21 @@ function addStudentToDashboardConnection(isPseudonym) {
             </div>
         `;
 
-        // 공공데이터 패널 실시간 통계 업데이트 (실명 위기 발생)
         document.getElementById('macro-drop-rate').innerText = "2학년 3반 위기 점수 급증 (95%)";
         document.getElementById('macro-safety-index').innerText = "자퇴 Threshold 긴급 돌파 경보";
 
-        // 실명 연계의 경우도 히트맵 및 통계 업데이트
         const cellIndex = initialHeatmapData.findIndex(cell => cell.grade === 2 && cell.class === 3);
         if (cellIndex !== -1) {
-            // 고위험 연계 시 95% 위험으로 히트맵 색깔 긴급 변경
-            initialHeatmapData[cellIndex].val = 95; 
+            initialHeatmapData[cellIndex].val = 95;
             renderHeatmap();
         }
 
         if (window.riskChart) {
             const currentData = window.riskChart.data.datasets[1].data;
-            currentData[currentData.length - 1] += 12; // 2학년 평균 지수 크게 급증
+            currentData[currentData.length - 1] += 12;
             window.riskChart.update();
         }
 
-        // 대시보드 뱃지 알림 알리기
         triggerMacroAlert(`긴급 연계: [2학년 3반 김지훈] 학생으로부터 명시적 사전 동의(Opt-in)를 완료한 위기 연계 신호가 접수되었습니다.`);
     }
 
@@ -610,12 +591,10 @@ function addStudentToDashboardConnection(isPseudonym) {
 
     listContainer.insertBefore(tr, listContainer.firstChild);
 
-    // 연계 학생 수 카운트 증가
     state.connectedStudents.push(state.studentName);
     document.getElementById('connected-count').innerText = `${state.connectedStudents.length}건 연계됨`;
 }
 
-// 5. Wee 클래스 연계 액션
 window.connectWeeClass = function(rowId, studentName) {
     const statusBadge = document.getElementById(`status-badge-${rowId}`);
     const actionBtn = document.getElementById(`action-btn-${rowId}`);
@@ -640,10 +619,8 @@ window.openDetailModal = function() {
     const modal = document.getElementById('detail-modal');
     modal.classList.add('open');
 
-    // 학생 정보 세팅
     document.getElementById('detail-student-info').innerText = `${state.studentGradeClass} ${state.studentName}`;
     
-    // 위험도 뱃지 및 점수 연동
     const badge = document.getElementById('detail-risk-badge');
     badge.innerText = state.detectedRiskLevel === 'Danger' ? '고위험' : '중위험';
     badge.className = `tbl-badge ${state.detectedRiskLevel === 'Danger' ? 'danger' : 'warning'}`;
@@ -651,11 +628,9 @@ window.openDetailModal = function() {
     document.getElementById('detail-risk-score').innerText = `${state.chatbotRiskScore} / 100`;
     document.getElementById('detail-risk-progress').style.width = `${state.chatbotRiskScore}%`;
 
-    // 키워드 목록 렌더링
     const kwList = document.getElementById('detail-keywords-list');
     kwList.innerHTML = state.detectedKeywords.map(kw => `<span class="keyword-tag">${kw}</span>`).join('') || '<span class="text-light">감지 키워드 없음</span>';
 
-    // 처방전 텍스트 연동
     const prescription = document.getElementById('detail-ai-prescription');
     if (state.detectedRiskLevel === 'Danger') {
         prescription.innerHTML = `학생이 <strong>'${state.detectedKeywords.join(', ')}'</strong> 등 극단적/학업중단 우려 단어를 반복적으로 발화하고 있습니다. 감정적 붕괴 수준이 임계치(80점)를 초과하여 자퇴 도미노의 '초기 징후(Early Stage)'가 뚜렷이 포착되었습니다. <strong>즉각적인 대면 면담 및 보호자 연락, Wee 클래스 정밀 진단 연계를 강력히 권고합니다.</strong>`;
@@ -663,9 +638,8 @@ window.openDetailModal = function() {
         prescription.innerHTML = `학생이 학업 부진 및 소외감으로 인해 중등도의 불안 상태를 겪고 있습니다. 성적 하락에 따른 '학업 포기' 키워드가 감지되었습니다. <strong>정기적인 관찰 상담 및 Wee 클래스 멘토링 프로그램 매칭을 권장합니다.</strong>`;
     }
 
-    // 대화 기록 원본 렌더링
     const historyContainer = document.getElementById('detail-chat-history');
-    historyContainer.innerHTML = ''; // 초기화
+    historyContainer.innerHTML = '';
 
     state.chatHistory.forEach(msg => {
         const msgWrapper = document.createElement('div');
@@ -684,12 +658,9 @@ window.openDetailModal = function() {
         historyContainer.appendChild(msgWrapper);
     });
     
-    // 자동 하단 스크롤
     historyContainer.scrollTop = historyContainer.scrollHeight;
 
-    // 모달 푸터 버튼 렌더링
     const footer = document.getElementById('detail-modal-footer');
-    // 현재 상담 행의 ID를 찾아서 동일한 버튼 상태 적용
     const rowId = document.querySelector('#connection-list tr').id;
     const isAlreadyConnected = state.connectedStudents.includes(state.studentName) && document.getElementById(`status-badge-${rowId}`).innerText === '연계 완료';
 
@@ -719,7 +690,6 @@ let selectedCell = null;
 function toggleHeatmapCellSelect(cell, cellEl) {
     const allCells = document.querySelectorAll('.heatmap-cell');
     
-    // 이미 선택된 셀을 다시 누른 경우 -> 초기화(전체 학년 평균 복원)
     if (selectedCell && selectedCell.grade === cell.grade && selectedCell.class === cell.class) {
         allCells.forEach(c => c.classList.remove('selected-cell'));
         selectedCell = null;
@@ -727,12 +697,10 @@ function toggleHeatmapCellSelect(cell, cellEl) {
         return;
     }
 
-    // 새로운 셀 선택
     allCells.forEach(c => c.classList.remove('selected-cell'));
     cellEl.classList.add('selected-cell');
     selectedCell = cell;
 
-    // 해당 학급의 시뮬레이션된 추이 그래프 데이터 생성
     const targetVal = cell.val;
     const mockClassData = [
         Math.max(0, Math.round(targetVal - 30)),
@@ -743,7 +711,6 @@ function toggleHeatmapCellSelect(cell, cellEl) {
         targetVal
     ];
 
-    // 차트 업데이트
     if (window.riskChart) {
         window.riskChart.data.datasets = [
             {
@@ -757,7 +724,6 @@ function toggleHeatmapCellSelect(cell, cellEl) {
             }
         ];
         
-        // 차트 타이틀 옵션 추가
         window.riskChart.options.plugins.title = {
             display: true,
             text: `${cell.grade}학년 ${cell.class}반 위기 지수 추이 (상세 분석)`,
@@ -775,7 +741,6 @@ function toggleHeatmapCellSelect(cell, cellEl) {
 
 function restoreDefaultChart() {
     if (window.riskChart) {
-        // 그라데이션 재생성
         const ctx = document.getElementById('riskTrendChart').getContext('2d');
         const gradient = ctx.createLinearGradient(0, 0, 0, 300);
         gradient.addColorStop(0, 'rgba(139, 92, 246, 0.45)');
