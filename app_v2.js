@@ -14,23 +14,29 @@ const state = {
     optInStatus: null, // 'accepted' | 'denied' | null
     connectedStudents: [], // 대시보드 연계 리스트
     unreadAlerts: 0,
-    isBotThinking: false // 중복 전송 및 꼬임 방지를 위한 전역 락 플래그
+    isBotThinking: false, // 중복 전송 및 꼬임 방지를 위한 전역 락 플래그
+    lastNormalIdx: -1 // 디폴트 응답 중복 방지용 이전 인덱스 기록
 };
 
-// 챗봇 응답 데이터베이스 (대화를 무조건 따뜻하게 이어가는 안전망 멘트 풀)
+// 챗봇 응답 데이터베이스 (대화를 무조건 따뜻하게 이어가는 안전망 멘트 풀 대폭 확장)
 const botResponses = {
     greeting: "반가워. 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자.",
     normal: [
-        "지훈아, 요즘 마음속에 여러 생각이나 고민들이 참 복잡하게 얽혀 있는 것 같아. 나비한테 편하게 더 이야기해줄래?",
-        "네 감정을 이렇게 솔직하게 털어놓아 줘서 고마워. 지훈이 마음이 조금이라도 더 가벼워질 때까지 끝까지 들어줄게.",
-        "이야기를 나누다 보니 네 마음의 짐이 고스란히 전해되는 것 같아. 언제든 편히 기대어 쉬어 가도 괜찮아."
+        "지훈아, 요즘 머릿속에 여러 생각이나 걱정거리들이 참 복잡하게 얽혀 있는 것 같아. 나비한테 편하게 하나씩 들려줄래?",
+        "네 감정을 이렇게 솔직하게 이야기해 줘서 고마워. 지훈이의 답답한 마음이 조금이라도 편해질 수 있게 내가 귀 기울일게.",
+        "이야기를 듣다 보니 마음 한구석에 무거운 짐이 있는 것 같아 걱정스럽네. 언제든 편하게 말해줘, 난 네 편이니까.",
+        "오늘 하루 어떤 일이 있었는지, 네가 느끼는 감정은 어떤지 조용히 귀 기울여 들을 준비가 되어 있어. 차분하게 이야기해보자.",
+        "그렇게 사소한 생각이나 일상 투정도 나에겐 아주 소중한 이야기란다. 지훈이 마음속 날씨는 오늘 어떤지 알려줘.",
+        "마음이 답답하고 답이 보이지 않을 땐, 그저 누군가에게 털어놓는 것만으로도 나아지곤 하지. 내가 든든한 쉼터가 되어 줄게.",
+        "열심히 하루하루를 버티고 있는 너를 보면 참 기특하고 응원하고 싶어져. 힘든 이야기도 괜찮으니 편하게 꺼내보렴.",
+        "네 마음에 낀 안개가 다 걷힐 때까지, 나비는 언제나 여기서 이 자리를 지키며 기다리고 있을게."
     ]
 };
 
 // [불안 키워드 감지 사전 - 위클래스 상담교사 긴급 연계용]
 const riskKeywordDictionary = {
     danger: ['자퇴', '죽고 싶', '죽고싶', '자살', '포기하고 싶', '포기하고싶', '끝내고 싶', '따돌림', '폭력', '괴롭힘', '욕설', '단체방', '단톡방', '맞았', '때렸'],
-    warning: ['망했어', '성적', '시험', '힘들어', '괴로워', '혼자', '소외', '가기 싫', '우울', '돈', '학원비', '가족', '엄마', '아빠']
+    warning: ['망했어', '성적', '시험', '힘들어', '괴로워', '혼자', '소외', '가기 싫', '우울', '돈', '학원비', '가족', '엄마', '아빠', '수학', '영어', '국어', '어려워']
 };
 
 // [초정밀 다중 의도(Intent) 분석용 가중치 딕셔너리]
@@ -65,7 +71,7 @@ const intentDictionary = [
     },
     {
         name: 'grade',
-        keywords: ['성적', '시험', '입시', '공부', '대학', '진학', '점수', '망했', '미래', '피곤', '학원'],
+        keywords: ['성적', '시험', '입시', '공부', '대학', '진학', '점수', '망했', '미래', '피곤', '학원', '수학', '영어', '국어', '과학', '과목', '어려워', '어려워요', '어려운', '수학이'],
         responses: [
             "학업 성적에 대한 압박과 불안한 미래, 그리고 입시 공부로 어깨가 짓눌리는 기분이겠구나. 시험 점수보다 네 마음의 평화가 훨씬 더 가치 있단다.",
             "공부나 시험 결과 때문에 괴롭고 막막했나 보네. 남들과 비교하며 조급해하지 마. 넌 이미 너만의 속도로 훌륭하게 자라나고 있어."
@@ -426,7 +432,7 @@ function analyzeSentiment(text) {
     }
 }
 
-// [초정밀 다중 의도 분석 엔진 + 철저한 예외 처리]
+// [초정밀 다중 의도 분석 엔진 + 철저한 예외 처리 + 중복 답변 연속 방지 쉴드]
 function generateBotResponse() {
     try {
         const lastUserMsg = state.chatHistory.filter(m => m.sender === 'user').slice(-1)[0];
@@ -462,7 +468,18 @@ function generateBotResponse() {
         let responseText = "";
 
         if (bestIntent && maxMatchCount > 0) {
-            const idx = Math.floor(Math.random() * bestIntent.responses.length);
+            let idx = Math.floor(Math.random() * bestIntent.responses.length);
+            
+            // 카테고리 내 다중 답변이 있을 때 중복 방지 필터 가동
+            if (bestIntent.responses.length > 1) {
+                const key = `last_${bestIntent.name}_idx`;
+                const lastIdx = state[key] !== undefined ? state[key] : -1;
+                while (idx === lastIdx) {
+                    idx = Math.floor(Math.random() * bestIntent.responses.length);
+                }
+                state[key] = idx;
+            }
+            
             responseText = bestIntent.responses[idx];
 
             if (bestIntent.riskScore > 0) {
@@ -475,9 +492,14 @@ function generateBotResponse() {
                 }
             }
         } else {
-            // 아무 매칭 없을 때 따뜻하게 대화를 계속 잇는 리액션 풀
-            const pool = botResponses.normal;
-            responseText = pool[Math.floor(Math.random() * pool.length)];
+            // 디폴트 멘트 추출 시 연속 중복 방지 장치 가동
+            let idx = Math.floor(Math.random() * botResponses.normal.length);
+            const lastNormalIdx = state.lastNormalIdx !== undefined ? state.lastNormalIdx : -1;
+            while (idx === lastNormalIdx) {
+                idx = Math.floor(Math.random() * botResponses.normal.length);
+            }
+            state.lastNormalIdx = idx;
+            responseText = botResponses.normal[idx];
         }
 
         appendMessage(responseText, 'assistant', () => {
@@ -494,7 +516,7 @@ function generateBotResponse() {
     } catch (e) {
         console.error("챗봇 답변 생성 에러:", e);
         state.isBotThinking = false;
-        // 에러 상황 발생 시에도 무조건 디폴트 텍스트 렌더링으로 멈춤 현상 차단
+        // 에러 발생 시 최후의 폴백 답변
         appendMessage("이야기를 나누다 보니 네 마음에 대해 더 알고 싶어진다. 편하게 계속 들려줘.", 'assistant');
     }
 }
@@ -508,6 +530,7 @@ function openOptInModal() {
     }
 }
 
+// 모달 닫기
 function closeOptInModal() {
     try {
         const modal = document.getElementById('optin-modal');
@@ -517,6 +540,7 @@ function closeOptInModal() {
     }
 }
 
+// Wee클래스 연계 동의 처리
 function handleOptInAccept() {
     try {
         state.optInStatus = 'accepted';
