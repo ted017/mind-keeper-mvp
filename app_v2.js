@@ -22,14 +22,9 @@ const state = {
 const botResponses = {
     greeting: "반가워. 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자.",
     normal: [
-        "지훈아, 요즘 머릿속에 여러 생각이나 걱정거리들이 참 복잡하게 얽혀 있는 것 같아. 나비한테 편하게 하나씩 들려줄래?",
-        "네 감정을 이렇게 솔직하게 이야기해 줘서 고마워. 지훈이의 답답한 마음이 조금이라도 편해질 수 있게 내가 귀 기울일게.",
-        "이야기를 듣다 보니 마음 한구석에 무거운 짐이 있는 것 같아 걱정스럽네. 언제든 편하게 말해줘, 난 네 편이니까.",
-        "오늘 하루 어떤 일이 있었는지, 네가 느끼는 감정은 어떤지 조용히 귀 기울여 들을 준비가 되어 있어. 차분하게 이야기해보자.",
-        "그렇게 사소한 생각이나 일상 투정도 나에겐 아주 소중한 이야기란다. 지훈이 마음속 날씨는 오늘 어떤지 알려줘.",
-        "마음이 답답하고 답이 보이지 않을 땐, 그저 누군가에게 털어놓는 것만으로도 나아지곤 하지. 내가 든든한 쉼터가 되어 줄게.",
-        "열심히 하루하루를 버티고 있는 너를 보면 참 기특하고 응원하고 싶어져. 힘든 이야기도 괜찮으니 편하게 꺼내보렴.",
-        "네 마음에 낀 안개가 다 걷힐 때까지, 나비는 언제나 여기서 이 자리를 지키며 기다리고 있을게."
+        "오늘 나비에게 일상 이야기를 건네줘서 고마워 지훈아! 가벼운 일상 대화도 좋지만, 혹시 마음 한구석에 숨겨둔 무거운 고민이나 속상한 일이 있다면 나비에게 편하게 꺼내놓아 줄래? 난 언제나 네 이야기를 들을 준비가 되어 있어.",
+        "소소한 하루 일상을 나비에게 공유해 줘서 기뻐. 혹시 지훈이가 요즘 공부나 친구 관계, 혹은 가족들 때문에 속상하거나 힘든 일이 있다면 언제든 편하게 말해줘. 내가 든든한 버팀목이 되어 줄게.",
+        "지훈이가 가볍게 건네주는 한마디에 나비는 참 따뜻해져. 혹시 요즘 말 못 할 마음의 짐이나 남들에게 털어놓지 못한 깊은 고민이 있다면 나비에게 살짝 들려주지 않을래?"
     ]
 };
 
@@ -46,8 +41,8 @@ const intentDictionary = [
         name: 'money',
         keywords: ['돈', '학원비', '용돈', '가난', '사정', '형편', '비싸', '알바', '금전', '경제'],
         responses: [
-            "학원비나 용돈, 집안 형편 같은 현실적인 고민은 참 미안하고 마음 무겁게 만들지. 네 잘못이 아니니 너무 혼자서 짐을 짊어지지 않았으면 해.",
-            "돈 걱정이나 용돈 문제로 마음이 쓰였구나. 그 나이대엔 학업에만 전념하고 싶을 텐데 경제적인 현실이 겹치면 정말 버겁게 느껴지지. 나비가 위로해 줄게."
+            "학원비나 용돈, 집안 형편 같은 현실적인 고민은 참 미안하고 마음 무겁게 만들지. 네 잘못이 아니니 너무 혼자서 짐을 짊어지지 않았으면 해. 필요하다면 학교 상담 선생님께 조심스레 털어놓아 도움을 받는 방법도 있어.",
+            "돈 걱정이나 용돈 문제로 마음이 쓰였구나. 그 나이대엔 학업에만 전념하고 싶을 텐데 경제적인 현실이 겹치면 정말 버겁게 느껴지지. 나비가 네 마음의 짐을 함께 나눌 수 있게 위클래스 연계를 도와줄까?"
         ],
         riskScore: 35
     },
@@ -55,8 +50,8 @@ const intentDictionary = [
         name: 'family',
         keywords: ['부모', '가족', '엄마', '아빠', '동생', '가정', '형제', '싸웠', '싸움', '아버', '어머'],
         responses: [
-            "가장 가깝고 힘이 되어야 할 부모님이나 가족과의 갈등이 생기면 정말 내 방 한구석조차 편치 않고 외로워지지. 네 속상한 감정을 나비가 다 들어줄게.",
-            "엄마나 아빠, 혹은 가족들과 부딪히면 참 막막하고 화도 나곤 하지. 가족이라서 더 상처받기 쉬운 법이야. 천천히 털어놓아 보렴."
+            "가장 가깝고 힘이 되어야 할 부모님이나 가족과의 갈등이 생기면 정말 내 방 한구석조차 편치 않고 외로워지지. 네 속상한 감정을 나비가 다 들어줄게. 함께 마음의 안정을 찾을 수 있는 방법을 상담 선생님과 고민해보자.",
+            "엄마나 아빠, 혹은 가족들과 부딪히면 참 막막하고 화도 나곤 하지. 가족이라서 더 상처받기 쉬운 법이야. 혼자 앓지 말고 나비에게 마음의 짐을 나눠주렴."
         ],
         riskScore: 40
     },
@@ -73,7 +68,7 @@ const intentDictionary = [
         name: 'grade',
         keywords: ['성적', '시험', '입시', '공부', '대학', '진학', '점수', '망했', '미래', '피곤', '학원', '수학', '영어', '국어', '과학', '과목', '어려워', '어려워요', '어려운', '수학이'],
         responses: [
-            "학업 성적에 대한 압박과 불안한 미래, 그리고 입시 공부로 어깨가 짓눌리는 기분이겠구나. 시험 점수보다 네 마음의 평화가 훨씬 더 가치 있단다.",
+            "학업 성적에 대한 압박과 불안한 미래, 그리고 입시 공부로 어깨가 짓눌리는 기분이겠구나. 시험 점수보다 네 마음의 평화가 훨씬 더 가치 있단다. 이 불안한 마음을 털어놓을 다정한 상담 선생님을 연결해 줄 수 있어.",
             "공부나 시험 결과 때문에 괴롭고 막막했나 보네. 남들과 비교하며 조급해하지 마. 넌 이미 너만의 속도로 훌륭하게 자라나고 있어."
         ],
         riskScore: 40
@@ -556,6 +551,35 @@ function handleOptInAccept() {
     }
 }
 
+// 교사용 대시보드 알림창 동적 생성 (1차 고도화 때 유실된 부분 완벽 추가로 복원 완료)
+function triggerMacroAlert(msg) {
+    try {
+        updateAlertBadge(1);
+        const container = document.querySelector('.main-content');
+        if (!container) return;
+        
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'macro-alert-banner';
+        alertDiv.style.cssText = `
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.4s ease;
+        `;
+        alertDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> <span>${msg}</span>`;
+        container.insertBefore(alertDiv, container.firstChild);
+    } catch (e) {
+        console.error("매크로 배너 생성 실패:", e);
+    }
+}
+
 // 교사 대시보드 테이블에 실시간으로 상담 데이터를 추가해주는 핵심 프론트 연동 로직
 function addStudentToDashboardConnection(isAnonymous) {
     try {
@@ -786,6 +810,114 @@ window.closeDetailModal = function() {
 // ==========================================================================
 // 5. 히트맵-그래프 실시간 인터랙션 연동 로직
 // ==========================================================================
+// 초기 데이터 주입 함수 (교사 대시보드 리스트 로드)
+function loadInitialDemoData() {
+    try {
+        const listContainer = document.getElementById('connection-list');
+        const emptyRow = document.getElementById('empty-table-row');
+
+        if (!listContainer) return;
+
+        if (emptyRow) {
+            emptyRow.remove();
+        }
+
+        // 기존 중복 제거
+        const existingPseudo = document.getElementById('demo-pseudo-row');
+        if (existingPseudo) existingPseudo.remove();
+        const existingReal = document.getElementById('demo-real-row');
+        if (existingReal) existingReal.remove();
+
+        const trPseudo = document.createElement('tr');
+        trPseudo.id = 'demo-pseudo-row';
+        trPseudo.innerHTML = `
+            <td><span class="tbl-badge safe"><i class="fa-solid fa-user-secret"></i> 가명 학생 (비식별)</span></td>
+            <td>1학년 (학반 비식별)</td>
+            <td><span class="tbl-badge warning">중위험</span></td>
+            <td><span class="keyword-tag">우울</span><span class="keyword-tag">성적</span></td>
+            <td><div class="triage-summary" title="개인 정보 보호를 위해 상세 요약 비공개">비식별 감성 데이터 분석에 의한 수치 누적 (상세 정보 비공개)</div></td>
+            <td><span class="tbl-badge safe">거시 통계 누적</span></td>
+            <td><button class="action-btn" style="background:#64748b;" onclick="alert('사전 동의(Opt-in)하지 않은 학생의 개별 데이터는 개인정보보호법에 의해 열람할 수 없습니다.')"><i class="fa-solid fa-lock"></i> 열람 불가</button></td>
+        `;
+        listContainer.appendChild(trPseudo);
+
+        const trReal = document.createElement('tr');
+        trReal.id = 'demo-real-row';
+        trReal.innerHTML = `
+            <td><strong>김지훈</strong></td>
+            <td>2학년 3반</td>
+            <td><span class="tbl-badge danger">고위험</span></td>
+            <td><span class="keyword-tag">자퇴</span><span class="keyword-tag">죽고싶다</span><span class="keyword-tag">포기</span></td>
+            <td><div class="triage-summary" title="김지훈 학생은 최근 학업 관련 고충 및 극단적 무력감을 토로함. AI 상담 결과 자퇴, 죽고싶다, 포기 등 우울 및 자해 위험 징후 키워드가 대량 검출되어 Wee 클래스 긴급 개입 필요 권고.">김지훈 학생은 최근 학업 관련 고충 및 극단적 무력감을 토로함...</div></td>
+            <td><span class="tbl-badge warning" id="status-badge-demo-real-row">상담 대기</span></td>
+            <td>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    <button class="action-btn" style="background:var(--primary-color);" onclick="openDetailModal('demo')"><i class="fa-solid fa-file-invoice"></i> 상세 보고서</button>
+                    <button class="action-btn" id="action-btn-demo-real-row" onclick="connectWeeClass('demo-real-row', '김지훈')"><i class="fa-solid fa-handshake-angle"></i> Wee클래스 연계</button>
+                </div>
+            </td>
+        `;
+        listContainer.appendChild(trReal);
+
+        // 연계 통계 건수 동기화
+        state.connectedStudents = ['김지훈'];
+        const countText = document.getElementById('connected-count');
+        if (countText) countText.innerText = `${state.connectedStudents.length}건 연계됨`;
+    } catch (e) {
+        console.error("데모 주입 에러:", e);
+    }
+}
+
+function renderHeatmap() {
+    try {
+        const grid = document.getElementById('risk-heatmap');
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        const initialHeatmapData = [
+            { grade: 1, class: 1, val: 12 }, { grade: 1, class: 2, val: 5 }, { grade: 1, class: 3, val: 28 }, { grade: 1, class: 4, val: 8 },
+            { grade: 1, class: 5, val: 15 }, { grade: 1, class: 6, val: 10 }, { grade: 1, class: 7, val: 3 }, { grade: 1, class: 8, val: 40 },
+            { grade: 2, class: 1, val: 18 }, { grade: 2, class: 2, val: 9 }, { grade: 2, class: 3, val: 22 }, { grade: 2, class: 4, val: 15 },
+            { grade: 2, class: 5, val: 78 }, { grade: 2, class: 6, val: 11 }, { grade: 2, class: 7, val: 32 }, { grade: 2, class: 8, val: 5 },
+            { grade: 3, class: 1, val: 42 }, { grade: 3, class: 2, val: 85 }, { grade: 3, class: 3, val: 19 }, { grade: 3, class: 4, val: 24 },
+            { grade: 3, class: 5, val: 6 }, { grade: 3, class: 6, val: 14 }, { grade: 3, class: 7, val: 9 }, { grade: 3, class: 8, val: 51 }
+        ];
+
+        initialHeatmapData.forEach(cell => {
+            const cellEl = document.createElement('div');
+            cellEl.className = 'heatmap-cell';
+            cellEl.id = `cell-${cell.grade}-${cell.class}`;
+
+            let riskClass = 'cell-safe';
+            if (cell.val > 70) {
+                riskClass = 'cell-danger';
+            } else if (cell.val > 35) {
+                riskClass = 'cell-warning';
+            }
+            
+            cellEl.classList.add(riskClass);
+
+            const titleSpan = document.createElement('span');
+            titleSpan.innerText = `${cell.grade}-${cell.class}`;
+            
+            const valSpan = document.createElement('span');
+            valSpan.className = 'cell-label';
+            valSpan.innerText = `${cell.val}%`;
+
+            cellEl.appendChild(titleSpan);
+            cellEl.appendChild(valSpan);
+
+            cellEl.addEventListener('click', () => {
+                toggleHeatmapCellSelect(cell, cellEl);
+            });
+
+            grid.appendChild(cellEl);
+        });
+    } catch (e) {
+        console.error("히트맵 그리기 에러:", e);
+    }
+}
+
 function toggleHeatmapCellSelect(cell, cellEl) {
     try {
         const allCells = document.querySelectorAll('.heatmap-cell');
