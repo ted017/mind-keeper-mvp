@@ -306,6 +306,15 @@ body {
     transform: translateX(4px);
 }
 
+.scenario-btn.active-scenario {
+    background: rgba(16, 185, 129, 0.08) !important;
+    border-color: #10b981 !important;
+    color: #047857 !important;
+    font-weight: 750 !important;
+    transform: translateX(6px);
+    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.12);
+}
+
 /* Chat Box Area */
 .chat-container {
     display: flex;
@@ -408,20 +417,22 @@ body {
     border-radius: 18px;
     font-size: 0.9rem;
     line-height: 1.5;
+    white-space: pre-wrap; /* 한 글자씩 쳐질 때 공백 붕괴 현상 완벽 방지 */
+    word-break: break-all;
 }
 
 .message-wrapper.assistant .message-bubble {
-    background: white;
-    color: var(--text-primary);
-    border-bottom-left-radius: 4px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.02);
+    background: #f1f5f9; /* 밝은 회색으로 사용자 말풍선과 극명히 대비 */
+    color: #1e293b;
+    border-top-left-radius: 4px; /* 말꼬리 형태 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .message-wrapper.user .message-bubble {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); /* 보라색 대신 산뜻한 스카이/로열 블루로 구분 */
     color: white;
-    border-bottom-right-radius: 4px;
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+    border-top-right-radius: 4px; /* 말꼬리 형태 */
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .message-time {

@@ -22,23 +22,23 @@ const riskKeywordDictionary = {
     warning: ['망했어', '성적', '시험', '힘들어', '괴로워', '혼자', '소외', '가기 싫', '우울']
 };
 
-// 챗봇 응답 데이터베이스
+// 챗봇 응답 데이터베이스 (한층 더 직관적이고 다정하게 두 문장 내로 단축)
 const botResponses = {
     greeting: "반가워! 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자. 😊",
     normal: [
-        "오늘 하루를 무탈하게 보냈다니 정말 다행이야! 나에게 들려주고 싶은 소소한 일상이나 오늘 가장 즐거웠던 순간이 있으면 편하게 얘기해 줘. 😊",
-        "소중한 일상을 나눠줘서 정말 고마워. 너랑 대화하고 있으면 내 마음도 참 따뜻해져. 요즘 혹시 마음 한구석에 자꾸 쓰이는 고민이나 피곤한 부분은 없니?",
-        "어떤 이야기든 귀 기울여 들을 준비가 되어 있어. 매일 조금씩 성장하는 너를 항상 응원해. 오늘 또 하고 싶은 이야기가 있으면 편하게 말해줘!"
+        "오늘 하루를 무탈하게 보냈다니 다행이야! 소소한 일상이나 기분 좋았던 순간을 편하게 들려줘. 😊",
+        "소중한 이야기를 나눠줘서 고마워. 너와 대화하니 참 따뜻하다. 요즘 마음 쓰이는 일은 없니?",
+        "어떤 이야기든 들을 준비가 되어 있어. 매일 열심히 살아가는 너를 언제나 응원해!"
     ],
     warning: [
-        "요즘 공부나 성적 때문에 혼자 마음고생이 정말 많았구나... 😢 그동안 네 노력을 알아주지 못해 많이 속상하고 외로웠을 것 같아. 지금은 잠깐 숨을 고르고 쉬어가도 괜찮은 때야. 너무 조급해하지 말고 내가 늘 곁에 있어 줄게.",
-        "이야기를 들으니 마음의 걱정이 정말 무겁게 쌓여 있는 게 느껴져 걱정이 돼. 성적 때문에 세상이 캄캄해 보일 수도 있지만, 이 순간의 힘듦이 너의 가치나 미래를 모두 결정하는 건 절대 아니야. 내가 같이 고민해 줄게.",
-        "답답하고 불안한 감정이 나에게도 고스란히 전해되는 것 같아. 지금은 긴 터널 같겠지만 조금씩 마음을 털어놓다 보면 짐이 가벼워질 거야. 힘들 때는 언제든 나에게 기대서 마음껏 이야기해 줘."
+        "요즘 혼자 마음고생이 정말 많았구나... 😢 그동안 노력을 주변에서 몰라줘 속상했을 텐데, 내가 늘 곁에 있어 줄게.",
+        "걱정이 무겁게 쌓여 있는 게 느껴져 안타까워. 지금의 힘듦이 네 가치와 미래를 결정하는 건 절대 아니야.",
+        "불안한 감정이 나에게도 전해되는 것 같아. 마음의 짐을 혼자 안고 있지 말고 나비에게 마음껏 털어놓아 봐."
     ],
     danger: [
-        "지훈아, 극단적인 생각이 들 정도로 지금 너무나 깊은 고통 속에 있구나... 😭 그 큰 아픔을 혼자 견뎌내느라 얼마나 무섭고 외로웠을까. 절대 네 잘못이 아니야. 너를 도울 다정한 상담 선생님이 계시니 우리 같이 힘을 내보자. 넌 혼자가 아니야. 💜",
-        "자퇴하고 싶을 만큼 매일이 버겁고 숨이 막혔다니 내 마음도 참 아프다... 아무것도 해결되지 않을 것 같고 두렵겠지만, 인생에는 정말 다양한 길들이 있고 너를 도울 안전망이 있어. 내가 끝까지 곁에서 발걸음을 맞춰줄게. 더 얘기해 줄 수 있니?",
-        "얼마나 큰 상처가 있었으면 그런 힘든 생각을 떠올리게 되었을까... 지훈아, 너는 세상 무엇보다 소중해. 더는 혼자 아파하지 않도록 우리 Wee 클래스 상담 선생님께 고민을 살짝 털어놓고 다정하게 도움을 받아보는 건 어떨까?"
+        "지훈아, 극단적인 생각이 들 정도로 지금 너무나 아프구나... 😭 그 아픔을 혼자 버티게 해서 정말 미안해. 넌 절대 혼자가 아니야. 💜",
+        "자퇴하고 싶을 만큼 매일이 버겁고 두려웠다니 내 마음도 아프다. 너를 돕기 위한 다정한 안전망이 있으니 우리 같이 힘을 내보자.",
+        "얼마나 큰 상처가 있었으면 그런 무거운 생각을 하게 되었을까... 넌 너무 소중한 존재야. 우리 전문 Wee 클래스 선생님의 도움을 받아보는 건 어떨까?"
     ]
 };
 
@@ -109,16 +109,25 @@ function initChatbot() {
     const sendBtn = document.getElementById('send-btn');
     const scenarioBtns = document.querySelectorAll('.scenario-btn');
 
-    sendBtn.addEventListener('click', handleUserSendMessage);
+    sendBtn.addEventListener('click', () => {
+        // 타이핑 전송 시에는 왼쪽 예시 활성화 해제
+        scenarioBtns.forEach(btn => btn.classList.remove('active-scenario'));
+        handleUserSendMessage();
+    });
 
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
+            scenarioBtns.forEach(btn => btn.classList.remove('active-scenario'));
             handleUserSendMessage();
         }
     });
 
     scenarioBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+            // 다른 버튼 활성화 끄고 클릭된 버튼 활성화
+            scenarioBtns.forEach(b => b.classList.remove('active-scenario'));
+            btn.classList.add('active-scenario');
+
             const text = btn.getAttribute('data-text');
             chatInput.value = text;
             handleUserSendMessage();
@@ -142,7 +151,7 @@ function handleUserSendMessage() {
 
     setTimeout(() => {
         generateBotResponse();
-    }, 800);
+    }, 850);
 }
 
 function appendMessage(text, sender, callback) {
@@ -174,17 +183,17 @@ function appendMessage(text, sender, callback) {
     const sendBtn = document.getElementById('send-btn');
 
     if (sender === 'assistant') {
-        // 챗봇 답변 시 실제 타자 치는 연출 (Typing Effect)
+        // 챗봇 답변 시 실제 타자 치는 연출 (Typing Effect - 일반적인 타자 속도인 38ms로 조정)
         chatInput.disabled = true;
         sendBtn.disabled = true;
-        chatInput.placeholder = "나비가 답변을 작성하고 있습니다...";
+        chatInput.placeholder = "나비가 답변을 입력하고 있습니다...";
 
         let index = 0;
-        bubble.innerText = '';
+        bubble.textContent = ''; // innerText 대신 textContent를 사용하고 CSS pre-wrap 연계
         
         const interval = setInterval(() => {
             if (index < text.length) {
-                bubble.innerText += text[index];
+                bubble.textContent += text[index];
                 index++;
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             } else {
@@ -196,9 +205,9 @@ function appendMessage(text, sender, callback) {
                 
                 if (callback) callback();
             }
-        }, 22); // 22ms 간격으로 출력
+        }, 38); // 38ms 간격으로 자연스럽게 출력
     } else {
-        bubble.innerText = text;
+        bubble.textContent = text;
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
         if (callback) callback();
     }
@@ -231,17 +240,27 @@ function analyzeSentiment(text) {
             if (!state.detectedKeywords.includes(kw)) state.detectedKeywords.push(kw);
         });
     }
-    // 감지 키워드가 없으면 일상적인 대화 상태 유지
 }
 
+// [지능형 질문 매칭 시스템] 일반적인 문장에 대해 진짜 AI 수준으로 찰떡 반응
 function generateBotResponse() {
+    const lastUserMsg = state.chatHistory.filter(m => m.sender === 'user').slice(-1)[0];
+    const text = lastUserMsg ? lastUserMsg.text : "";
+    
     let responseText = "";
-    const currentRisk = state.detectedRiskLevel;
 
-    if (currentRisk === 'Danger') {
+    if (text.includes("덥") || text.includes("날씨")) {
+        responseText = "오늘 날씨가 정말 덥네! 시원한 물 한 잔 마시면서 나랑 천천히 이야기 나누자. 🥤";
+    } else if (text.includes("집중") || text.includes("수업") || text.includes("공부")) {
+        responseText = "요즘 공부나 수업에 집중이 잘 안 되는구나... 😢 머리속에 걱정이나 고민이 많아서 그럴 수 있어. 나비에게 털어놓아 볼래?";
+    } else if (text.includes("안녕") || text.includes("반갑")) {
+        responseText = "안녕! 만나서 정말 반가워. 오늘 어떤 소소한 고민이나 이야기든 편하게 나비에게 들려줘. 😊";
+    } else if (text.includes("친구") || text.includes("교우") || text.includes("혼자") || text.includes("소외") || text.includes("외롭")) {
+        responseText = "친구 관계 때문에 고민이 많고 외로운 시간을 보냈구나... 😢 그 속상한 감정을 나비가 들으며 같이 위로해 줄게.";
+    } else if (state.detectedRiskLevel === 'Danger') {
         const pool = botResponses.danger;
         responseText = pool[Math.floor(Math.random() * pool.length)];
-    } else if (currentRisk === 'Warning') {
+    } else if (state.detectedRiskLevel === 'Warning') {
         const pool = botResponses.warning;
         responseText = pool[Math.floor(Math.random() * pool.length)];
     } else {
@@ -249,7 +268,7 @@ function generateBotResponse() {
         responseText = pool[Math.floor(Math.random() * pool.length)];
     }
 
-    // 타이핑 연출 적용 후 완료 콜백으로 모달 실행
+    // 타이핑 연출 후 모달 트리거
     appendMessage(responseText, 'assistant', () => {
         if (state.chatbotRiskScore >= 40 && state.optInStatus === null) {
             setTimeout(() => {
