@@ -13,7 +13,8 @@ const state = {
     ],
     optInStatus: null, // 'accepted' | 'denied' | null
     connectedStudents: [], // 대시보드 연계 리스트
-    unreadAlerts: 0
+    unreadAlerts: 0,
+    isBotThinking: false // 중복 전송 및 꼬임 방지를 위한 전역 락 플래그
 };
 
 // 챗봇 응답 데이터베이스 (대화를 무조건 따뜻하게 이어가는 안전망 멘트 풀)
@@ -243,12 +244,14 @@ function initChatbot() {
 
     if (sendBtn && chatInput) {
         sendBtn.addEventListener('click', () => {
+            if (state.isBotThinking) return; // 봇이 인쇄중이면 클릭 무시
             scenarioBtns.forEach(btn => btn.classList.remove('active-scenario'));
             handleUserSendMessage();
         });
 
         chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
+                if (state.isBotThinking) return;
                 scenarioBtns.forEach(btn => btn.classList.remove('active-scenario'));
                 handleUserSendMessage();
             }
@@ -257,6 +260,7 @@ function initChatbot() {
 
     scenarioBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+            if (state.isBotThinking) return; // 나비가 말하는 중이면 예시 클릭 무시!
             scenarioBtns.forEach(b => b.classList.remove('active-scenario'));
             btn.classList.add('active-scenario');
 
@@ -274,6 +278,7 @@ function initChatbot() {
 
 function handleUserSendMessage() {
     try {
+        if (state.isBotThinking) return; // 이미 말하고 있으면 전송 차단 (연타 꼬임 방지)
         const chatInput = document.getElementById('chat-input');
         if (!chatInput) return;
         const text = chatInput.value.trim();
@@ -290,6 +295,7 @@ function handleUserSendMessage() {
         }, 850);
     } catch (e) {
         console.error("메시지 전송 중 에러:", e);
+        state.isBotThinking = false;
     }
 }
 
@@ -324,6 +330,7 @@ function appendMessage(text, sender, callback) {
         const sendBtn = document.getElementById('send-btn');
 
         if (sender === 'assistant') {
+            state.isBotThinking = true; // 락 설정!
             if (chatInput && sendBtn) {
                 chatInput.disabled = true;
                 sendBtn.disabled = true;
@@ -341,6 +348,7 @@ function appendMessage(text, sender, callback) {
                         messagesContainer.scrollTop = messagesContainer.scrollHeight;
                     } else {
                         clearInterval(interval);
+                        state.isBotThinking = false; // 락 해제!
                         if (chatInput && sendBtn) {
                             chatInput.disabled = false;
                             sendBtn.disabled = false;
@@ -351,6 +359,7 @@ function appendMessage(text, sender, callback) {
                     }
                 } catch (err) {
                     clearInterval(interval);
+                    state.isBotThinking = false;
                     bubble.textContent = text;
                     if (chatInput && sendBtn) {
                         chatInput.disabled = false;
@@ -366,6 +375,7 @@ function appendMessage(text, sender, callback) {
         }
     } catch (e) {
         console.error("메시지 그리기 에러:", e);
+        state.isBotThinking = false;
         if (callback) callback();
     }
 }
@@ -483,6 +493,7 @@ function generateBotResponse() {
         });
     } catch (e) {
         console.error("챗봇 답변 생성 에러:", e);
+        state.isBotThinking = false;
         // 에러 상황 발생 시에도 무조건 디폴트 텍스트 렌더링으로 멈춤 현상 차단
         appendMessage("이야기를 나누다 보니 네 마음에 대해 더 알고 싶어진다. 편하게 계속 들려줘.", 'assistant');
     }
@@ -611,7 +622,7 @@ function handleOptInDeny() {
     }
 }
 
-// Wee 클래스 연계 처리
+// Wee 전문 연계 완료 처리
 window.connectWeeClass = function(rowId, studentName) {
     try {
         const row = document.getElementById(rowId);
