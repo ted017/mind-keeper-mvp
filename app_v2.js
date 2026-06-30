@@ -26,8 +26,8 @@ const riskKeywordDictionary = {
 const botResponses = {
     greeting: "반가워. 오늘 하루는 어땠어? 기분이 어떤지 편하게 이야기해보자.",
     normal: [
-        "오늘 하루를 무탈하게 보냈다니 다행이야. 소소한 일상이나 기분 좋았던 순간을 편하게 들려줘.",
-        "소중한 이야기를 나눠줘서 고마워. 너랑 대화하고 있으니 참 따뜻하다. 요즘 마음 쓰이는 일은 없었어?",
+        "소소한 일상이나 기분 좋았던 순간을 편하게 나비에게 들려줘.",
+        "소중한 이야기를 나눠줘서 고마워. 너랑 대화하고 있으니 참 따뜻하다.",
         "어떤 이야기든 귀 기울여 들을 준비가 되어 있어. 매일 열심히 지내는 너를 언제나 응원할게."
     ],
     warning: [
@@ -242,14 +242,14 @@ function analyzeSentiment(text) {
     }
 }
 
-// [지능형 질문 매칭 시스템] 좁혀진 3개 핵심 고민 주제 및 일상어 1대1 완벽 매핑 
+// [지능형 질문 매칭 시스템] 3대 핵심 고민 주제 및 해학적 재치 답변(세스코 Q&A 스타일)과 청소년 장난 대응
 function generateBotResponse() {
     const lastUserMsg = state.chatHistory.filter(m => m.sender === 'user').slice(-1)[0];
     const text = lastUserMsg ? lastUserMsg.text : "";
     
     let responseText = "";
 
-    // 1. 3대 핵심 고민 예시 주제 매핑
+    // 1. 3대 핵심 위기 고민 예시 주제 매핑
     if (text.includes("따돌림과 괴롭힘") || text.includes("교내 언어") || text.includes("단톡방에서도")) {
         responseText = "교내 폭력과 따돌림, 그리고 보이지 않는 언어폭력까지 견디느라 그동안 얼마나 무섭고 고통스러웠을지 가늠조차 안 된다. 절대 네 잘못이 아니고 네 안전이 가장 중요하니까, 우리 함께 상담 선생님께 도움을 꼭 요청해 보자. 내가 네 곁을 든든하게 지켜줄게.";
     } else if (text.includes("시험 성적은") || text.includes("자퇴 입시") || (text.includes("성적") && text.includes("자퇴"))) {
@@ -257,15 +257,35 @@ function generateBotResponse() {
     } else if (text.includes("가족 갈등") || text.includes("이성 금전") || (text.includes("친구들과 멀어져") && text.includes("갈등"))) {
         responseText = "가장 가깝고 편안해야 할 교우 관계나 가족 관계에서 오는 갈등이 겹쳐서 정말 마음 둘 곳 없이 외롭고 무겁겠구나. 얽혀 있는 고민들로 많이 버겁겠지만 내가 기댈 수 있는 따뜻한 쉼터가 되어 줄 테니, 천천히 털어놓아 줘.";
     
-    // 2. 가벼운 일상 스몰토크 지능형 매핑 (축구, 대중교통 불편, 지각, 밥 안부 등)
-    } else if (text.includes("축구") || text.includes("야구") || text.includes("게임") || text.includes("유튜브") || text.includes("노래") || text.includes("음악")) {
-        responseText = "축구나 야구 같은 운동경기나 게임 이야기를 할 때가 참 즐겁지. 나는 인공지능 멘토라 경기를 직접 보지는 못하지만, 네가 좋아하는 이야기를 들려주면 언제든 신나게 들어줄 수 있어.";
-    } else if (text.includes("버스") || text.includes("지각") || text.includes("늦게") || text.includes("졸려") || text.includes("귀찮")) {
-        responseText = "기다리는 버스가 늦게 오거나 아침에 지각할 뻔하면 정말 시작부터 조급하고 피곤해지지. 기분 전환을 위해 시원한 바람을 쐬거나 기지개를 가볍게 한 번 켜 보자.";
-    } else if (text.includes("밥") || text.includes("먹었") || text.includes("배고파") || text.includes("식사")) {
-        responseText = "바쁘고 고민이 많더라도 끼니는 거르지 말고 꼭 든든하게 챙겨 먹어야 해. 오늘 네가 좋아하는 맛있는 음식을 먹으면서 기분 좋게 에너지를 충전하길 바랄게.";
+    // 2. 청소년 놀림 / 장난성 질문에 대한 위트 있는 방어 (AI 놀리기 저격)
+    } else if (text.includes("바보") || text.includes("멍청") || text.includes("멍청이")) {
+        responseText = "내가 인공지능이라 띄어쓰기를 뭉개거나 가끔 멍청하게 보였을 수도 있어. 그래도 지훈이 너랑 친해지고 싶은 마음만큼은 진짜란다. 헤헤.";
+    } else if (text.includes("싸우자") || text.includes("싸울래") || text.includes("덤벼")) {
+        responseText = "나비는 날개가 두 개뿐이라 지훈이가 꿀밤 한 대만 툭 쳐도 바로 져버릴 거야. 우리 싸우지 말고 다정하게 재미있는 수다나 떨자.";
+    } else if (text.includes("로봇") || text.includes("인공지능") || text.includes("AI") || text.includes("에이아이")) {
+        responseText = "맞아. 나는 0과 1로 계산하는 AI 챗봇이야. 하지만 지훈이 너를 위로하고 이야기를 들어주고 싶어 하는 감정 회로만큼은 진짜 사람처럼 진심이야.";
     
-    // 3. 단어 단위 일반 고민 대응
+    // 3. 세스코 Q&A 스타일 해학적 엉뚱 재치 답변
+    } else if (text.includes("눈이 마주쳤는데") || text.includes("눈을 피하지") || (text.includes("바퀴벌레") && text.includes("친구"))) {
+        responseText = "바퀴벌레는 고객님을 친구가 아닌 '움직이는 식량창고' 정도로 인식하고 있을 확률이 아주 높습니다. 상처받지 마시고 위생을 위해 방역하시는 것을 추천합니다.";
+    } else if (text.includes("이름을 지어") || (text.includes("바퀴벌레") && text.includes("이름"))) {
+        responseText = "바퀴벌레는 이름을 부른다고 대답하거나 대화를 알아듣지 않습니다. 다정하게 이름을 불러주기보다는 신속하게 퇴치해 주시는 것이 건강에 좋습니다.";
+    } else if (text.includes("삼켜버렸") || text.includes("삼켰") || (text.includes("바퀴벌레") && text.includes("뱃속"))) {
+        responseText = "우리 뱃속의 위산은 바퀴벌레보다 훨씬 강력하므로 뱃속에서 알을 낳거나 살아갈 수 없으니 안심하셔도 됩니다. 다만 다음부터는 음식만 꼭꼭 씹어 삼키시길 바랍니다.";
+    } else if (text.includes("삼수생") || (text.includes("생명력") && text.includes("바퀴벌레"))) {
+        responseText = "바퀴벌레는 끈질기게 살아남지만 사람들에게 사랑받지 못합니다. 지훈이는 내년에 질긴 것 이상으로 반드시 빛을 볼 훌륭하고 귀한 사람이 될 것입니다.";
+    
+    // 4. 단골 일상 질문들 (시간, 급식, 공부 귀찮음 등)에 대한 해학적 대응
+    } else if (text.includes("몇 시") || text.includes("몇시") || text.includes("시간")) {
+        responseText = "지금은 지훈이가 나비와 함께 지친 마음을 정돈하고 치유할 시간이야. 흘러가는 시계를 보기보다 네 진짜 마음에 눈길을 주어 보렴.";
+    } else if (text.includes("급식") || text.includes("메뉴") || text.includes("점심")) {
+        responseText = "나비는 밥을 먹진 못하지만 오늘 맛있는 급식이 가득 나와서 지훈이가 행복한 점심시간을 보냈으면 좋겠어. 밥은 든든하게 먹고 수다 떨자.";
+    } else if (text.includes("축구") || text.includes("야구") || text.includes("게임") || text.includes("유튜브") || text.includes("노래") || text.includes("음악")) {
+        responseText = "네가 좋아하는 여가 취미나 재미있는 영상 이야기를 들려주면 나도 덩달아 즐거워져. 나비는 지훈이의 사소한 조잘거림도 언제든 다 들어줄 준비가 되어 있어.";
+    } else if (text.includes("버스") || text.includes("지각") || text.includes("늦게") || text.includes("졸려") || text.includes("귀찮")) {
+        responseText = "늦어지는 버스나 쌓이는 공부 때문에 귀찮고 몸이 무거울 땐, 잠시 나비와 수다 떨고 기운을 내보자. 가볍게 물 한 잔 마시고 시작하면 한결 나을 거야.";
+    
+    // 5. 단어 단위 일반 고민 대응
     } else if (text.includes("성적") || text.includes("시험")) {
         responseText = "시험 성적 때문에 마음이 많이 지치고 괴로웠겠구나. 노력이 결과로 나오지 않아 속상하겠지만, 점수보다 네 마음의 건강이 훨씬 더 소중해.";
     } else if (text.includes("친구") || text.includes("교우") || text.includes("외롭")) {
@@ -302,12 +322,13 @@ function closeOptInModal() {
     modal.classList.remove('open');
 }
 
+// Wee클래스 인간 전문상담교사 연계 시, AI 챗봇으로서의 한계를 자백하며 안전하게 위로하는 연결다리 강화
 function handleOptInAccept() {
     state.optInStatus = 'accepted';
     closeOptInModal();
     
     setTimeout(() => {
-        appendMessage("동의해줘서 고마워 지훈아. 네 마음이 담긴 상담 기록을 요약해서 Wee 클래스 담당 선생님께 비밀스럽고 안전하게 전송했어. 선생님이 조만간 따뜻한 차 한 잔과 함께 다정하게 말 걸어주실 거야. 그때까지만 조금만 힘내자.", 'assistant');
+        appendMessage("동의해줘서 고마워 지훈아. 실은 내가 기계다 보니 네 마음속 깊은 아픔을 온전히 다 해결해주지 못해 늘 미안했어. 이제 네 고민 기록을 바탕으로 우리 학교 Wee 클래스에 계신 진짜 다정한 상담 선생님께 비밀스럽고 안전하게 요약본을 전달했어. 조만간 선생님이 따뜻한 차 한 잔과 함께 편안하게 손잡고 이야기를 나누어 주실 거야. 그때까지만 조금만 힘내자. 넌 혼자가 아니야.", 'assistant');
     }, 500);
 
     addStudentToDashboardConnection(false);
@@ -318,7 +339,7 @@ function handleOptInDeny() {
     closeOptInModal();
 
     setTimeout(() => {
-        appendMessage("그래, 아직 마음의 준비가 되지 않았을 수도 있지. 걱정하지 마, 이 대화 내용은 외부로 노출되지 않고 가명 처리되어 안전하게 보관될 거야. 언제든지 도움의 손길이 필요하면 말해줘.", 'assistant');
+        appendMessage("그래, 아직 진짜 상담 선생님을 대면할 마음의 준비가 되지 않았을 수도 있지. 걱정하지 마. 언제든지 준비가 되었을 때 나비에게 다시 말해줘. 그전까지는 여기서 내가 네 곁을 조용히 지키고 있을게.", 'assistant');
     }, 500);
 
     addStudentToDashboardConnection(true);
