@@ -42,6 +42,29 @@ const botResponses = {
     ]
 };
 
+// 현재 시간 기준 최근 N주간의 동적 주차 라벨 계산기 (제출 시점에 맞춰 실시간 연동)
+function getRecentWeeksLabels(count = 6) {
+    const labels = [];
+    const today = new Date();
+    
+    for (let i = 0; i < count; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - (i * 7));
+        
+        const month = d.getMonth() + 1;
+        const dateNum = d.getDate();
+        const weekNum = Math.ceil(dateNum / 7);
+        
+        let label = `${month}월 ${weekNum}주`;
+        if (i === 0) {
+            label += "(현재)";
+        }
+        labels.push(label);
+    }
+    
+    return labels.reverse();
+}
+
 // ==========================================================================
 // 초기화 및 이벤트 리스너 등록
 // ==========================================================================
@@ -462,7 +485,7 @@ function renderChart() {
     window.riskChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['4월 1주', '4월 2주', '4월 3주', '4월 4주', '5월 1주', '5월 2주(현재)'],
+            labels: getRecentWeeksLabels(6),
             datasets: [
                 {
                     label: '1학년 평균 위험 지수',
